@@ -1,5 +1,5 @@
 {
-  "run_timestamp_utc": "2026-03-06T18:08:13Z",
+  "run_timestamp_utc": "2026-03-06T20:58:26Z",
   "user_agent": "LLMDeprecationCrawler/1.0 (compliance)",
   "sources": {
     "openai": [
@@ -637,14 +637,14 @@
       "unchanged": 76
     },
     "anthropic": {
-      "updated": 3,
+      "updated": 0,
       "added": 0,
-      "unchanged": 27
+      "unchanged": 30
     },
     "gemini": {
-      "updated": 2,
-      "added": 17,
-      "unchanged": 26
+      "updated": 0,
+      "added": 0,
+      "unchanged": 45
     }
   },
   "parse_warnings": []
