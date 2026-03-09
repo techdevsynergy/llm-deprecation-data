@@ -1,5 +1,5 @@
 {
-  "run_timestamp_utc": "2026-03-09T16:34:05Z",
+  "run_timestamp_utc": "2026-03-09T17:56:42Z",
   "user_agent": "LLMDeprecationCrawler/1.0 (compliance)",
   "sources": {
     "openai": [
@@ -8,25 +8,25 @@
       "https://platform.openai.com/docs/changelog"
     ],
     "anthropic": [
-      "https://docs.anthropic.com/en/docs/resources/model-deprecations",
-      "https://docs.anthropic.com/en/docs/about-claude/models",
-      "https://docs.anthropic.com/en/release-notes/overview"
+      "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "https://platform.claude.com/docs/en/release-notes/overview"
     ],
     "gemini": [
-      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
-      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models",
-      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/live-api",
-      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-pro",
-      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-flash",
-      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-1-pro",
-      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-1-flash-lite",
-      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-pro",
-      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash",
-      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-lite",
-      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-image",
-      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-live-api",
-      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash",
-      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash-lite"
+      "https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
+      "https://cloud.google.com/vertex-ai/generative-ai/docs/models",
+      "https://cloud.google.com/vertex-ai/generative-ai/docs/live-api",
+      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-pro",
+      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-flash",
+      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-1-pro",
+      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-1-flash-lite",
+      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-pro",
+      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash",
+      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-lite",
+      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-image",
+      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-live-api",
+      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash",
+      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash-lite"
     ]
   },
   "url_results": [
@@ -65,40 +65,40 @@
     },
     {
       "provider": "anthropic",
-      "url": "https://docs.anthropic.com/en/docs/resources/model-deprecations",
+      "url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
       "final_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
       "http_status": 200,
       "fallback_url": null,
       "fetched_via": "direct",
       "error": null,
-      "robots_error": "robots HTTP 404; treated as allow",
+      "robots_error": null,
       "records_extracted": 24
     },
     {
       "provider": "anthropic",
-      "url": "https://docs.anthropic.com/en/docs/about-claude/models",
+      "url": "https://platform.claude.com/docs/en/about-claude/models/overview",
       "final_url": "https://platform.claude.com/docs/en/about-claude/models/overview",
       "http_status": 200,
       "fallback_url": null,
       "fetched_via": "direct",
       "error": null,
-      "robots_error": "robots HTTP 404; treated as allow",
+      "robots_error": null,
       "records_extracted": 0
     },
     {
       "provider": "anthropic",
-      "url": "https://docs.anthropic.com/en/release-notes/overview",
+      "url": "https://platform.claude.com/docs/en/release-notes/overview",
       "final_url": "https://platform.claude.com/docs/en/release-notes/overview",
       "http_status": 200,
       "fallback_url": null,
       "fetched_via": "direct",
       "error": null,
-      "robots_error": "robots HTTP 404; treated as allow",
+      "robots_error": null,
       "records_extracted": 0
     },
     {
       "provider": "gemini",
-      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
       "http_status": 200,
       "fallback_url": null,
@@ -109,7 +109,7 @@
     },
     {
       "provider": "gemini",
-      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models",
       "http_status": 200,
       "fallback_url": null,
@@ -120,7 +120,7 @@
     },
     {
       "provider": "gemini",
-      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/live-api",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/live-api",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/live-api",
       "http_status": 200,
       "fallback_url": null,
@@ -131,7 +131,7 @@
     },
     {
       "provider": "gemini",
-      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-pro",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-pro",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-pro",
       "http_status": 200,
       "fallback_url": null,
@@ -142,7 +142,7 @@
     },
     {
       "provider": "gemini",
-      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-flash",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-flash",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-flash",
       "http_status": 200,
       "fallback_url": null,
@@ -153,7 +153,7 @@
     },
     {
       "provider": "gemini",
-      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-1-pro",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-1-pro",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-1-pro",
       "http_status": 200,
       "fallback_url": null,
@@ -164,7 +164,7 @@
     },
     {
       "provider": "gemini",
-      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-1-flash-lite",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-1-flash-lite",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-1-flash-lite",
       "http_status": 200,
       "fallback_url": null,
@@ -175,7 +175,7 @@
     },
     {
       "provider": "gemini",
-      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-pro",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-pro",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-pro",
       "http_status": 200,
       "fallback_url": null,
@@ -186,7 +186,7 @@
     },
     {
       "provider": "gemini",
-      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash",
       "http_status": 200,
       "fallback_url": null,
@@ -197,7 +197,7 @@
     },
     {
       "provider": "gemini",
-      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-lite",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-lite",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-lite",
       "http_status": 200,
       "fallback_url": null,
@@ -208,7 +208,7 @@
     },
     {
       "provider": "gemini",
-      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-image",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-image",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-image",
       "http_status": 200,
       "fallback_url": null,
@@ -219,7 +219,7 @@
     },
     {
       "provider": "gemini",
-      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-live-api",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-live-api",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-live-api",
       "http_status": 200,
       "fallback_url": null,
@@ -230,7 +230,7 @@
     },
     {
       "provider": "gemini",
-      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash",
       "http_status": 200,
       "fallback_url": null,
@@ -241,7 +241,7 @@
     },
     {
       "provider": "gemini",
-      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash-lite",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash-lite",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash-lite",
       "http_status": 200,
       "fallback_url": null,
@@ -895,9 +895,9 @@
   ],
   "provider_summary": {
     "openai": {
-      "updated": 11,
-      "added": 1,
-      "unchanged": 65
+      "updated": 0,
+      "added": 0,
+      "unchanged": 77
     },
     "anthropic": {
       "updated": 0,
