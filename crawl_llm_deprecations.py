@@ -29,6 +29,7 @@ import requests
 USER_AGENT = "LLMDeprecationCrawler/1.0 (compliance)"
 REQUEST_TIMEOUT_SECONDS = 30
 HOST_DELAY_SECONDS = 1.0
+FETCH_FALLBACK_STATUSES = {401, 403, 429}
 
 ALLOWED_STATUSES = {"active", "deprecated", "legacy", "retired"}
 STATUS_PRIORITY = {"active": 0, "legacy": 1, "deprecated": 2, "retired": 3}
@@ -76,7 +77,8 @@ REPLACEMENT_PATTERNS = [
 
 
 def normalize_model_id(token: str) -> str:
-    cleaned = token.strip().strip("`'\"()[]{}.,;:").lower()
+    cleaned = token.replace("‑", "-").replace("–", "-").replace("—", "-")
+    cleaned = cleaned.strip().strip("`'\"()[]{}.,;:").lower()
     cleaned = cleaned.rstrip("*")
     return cleaned
 
@@ -121,7 +123,13 @@ def extract_model_ids(text: str, provider: str) -> List[str]:
 def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
     if not text:
         return None
-    s = " ".join(text.strip().split())
+    s = (
+        text.replace("‑", "-")
+        .replace("–", "-")
+        .replace("—", "-")
+        .replace("\u00a0", " ")
+    )
+    s = " ".join(s.strip().split())
     sl = s.lower()
     if any(x in sl for x in ["n/a", "no retirement date announced", "unknown", "tbd"]):
         return None
@@ -238,6 +246,65 @@ def parse_robots_txt(text: str) -> Dict[str, List[Tuple[str, str]]]:
                 groups.setdefault(agent, []).append((field, value))
 
     return groups
+
+
+def build_jina_reader_url(url: str) -> str:
+    parsed = urlparse(url)
+    path = parsed.path or "/"
+    if parsed.query:
+        path = f"{path}?{parsed.query}"
+    return f"https://r.jina.ai/http://{parsed.netloc}{path}"
+
+
+def parse_markdown_tables(markdown_text: str) -> List[List[List[str]]]:
+    """
+    Parse basic GitHub-style markdown tables into the same shape as HTML tables:
+      [ [header_cells], [row_cells], ... ]
+    """
+    def split_row(raw: str) -> List[str]:
+        parts = [p.strip() for p in raw.strip().strip("|").split("|")]
+        return [re.sub(r"\s+", " ", p).strip() for p in parts]
+
+    lines = markdown_text.splitlines()
+    out: List[List[List[str]]] = []
+    i = 0
+    while i < len(lines):
+        header_line = lines[i].strip()
+        if not (header_line.startswith("|") and header_line.endswith("|")):
+            i += 1
+            continue
+        if i + 1 >= len(lines):
+            i += 1
+            continue
+        sep_line = lines[i + 1].strip()
+        if not (sep_line.startswith("|") and sep_line.endswith("|")):
+            i += 1
+            continue
+
+        sep_cells = [c.strip() for c in sep_line.strip("|").split("|")]
+        if not sep_cells or not all(re.match(r"^:?-{3,}:?$", cell) for cell in sep_cells):
+            i += 1
+            continue
+
+        header_cells = split_row(header_line)
+        table: List[List[str]] = [header_cells]
+        j = i + 2
+        while j < len(lines):
+            row_line = lines[j].strip()
+            if not (row_line.startswith("|") and row_line.endswith("|")):
+                break
+            row_cells = split_row(row_line)
+            if len(row_cells) < len(header_cells):
+                row_cells.extend([""] * (len(header_cells) - len(row_cells)))
+            table.append(row_cells[: len(header_cells)])
+            j += 1
+
+        if len(table) > 1:
+            out.append(table)
+            i = j
+        else:
+            i += 1
+    return out
 
 
 def robots_allows(user_agent: str, target_url: str, rules: Dict[str, List[Tuple[str, str]]]) -> bool:
@@ -487,12 +554,28 @@ def parse_tables(
                     )
             continue
 
-        # Gemini table with old versions:
+        # OpenAI or Gemini style lifecycle table:
         # Model ID | Release date | Retirement date | Recommended upgrade
-        if "recommended upgrade" in header_str and "retirement date" in header_str:
-            model_idx = next((i for i, h in enumerate(header) if "model id" in h or h.strip() == "model"), 0)
-            retirement_idx = next((i for i, h in enumerate(header) if "retirement date" in h or "discontinuation date" in h), None)
-            repl_idx = next((i for i, h in enumerate(header) if "recommended upgrade" in h or "replacement" in h), None)
+        if (
+            ("recommended upgrade" in header_str and "retirement date" in header_str)
+            or ("shutdown date" in header_str and "recommended replacement" in header_str)
+        ):
+            model_idx = next(
+                (i for i, h in enumerate(header) if "model id" in h or "model / system" in h or h.strip() == "model"),
+                0,
+            )
+            retirement_idx = next(
+                (
+                    i
+                    for i, h in enumerate(header)
+                    if "retirement date" in h or "discontinuation date" in h or "shutdown date" in h or "sunset" in h
+                ),
+                None,
+            )
+            repl_idx = next(
+                (i for i, h in enumerate(header) if "recommended upgrade" in h or "replacement" in h),
+                None,
+            )
             for row in table[1:]:
                 if model_idx >= len(row):
                     continue
@@ -515,7 +598,7 @@ def parse_tables(
                         deprecated_date=None,
                         sunset_date=sunset,
                         replacement=replacement_norm,
-                        notes=f"Crawled from {url}: retirement + recommended upgrade table.",
+                        notes=f"Crawled from {url}: lifecycle table.",
                         source_url=url,
                     )
             continue
@@ -650,18 +733,40 @@ def crawl_sources(sources: Dict[str, List[str]]) -> Tuple[Dict[Tuple[str, str], 
             before_count = len(results)
             http_status = None
             final_url = None
+            fallback_url = None
+            fetched_via = "direct"
             error = None
             try:
                 resp = session.get(url, timeout=REQUEST_TIMEOUT_SECONDS)
                 http_status = resp.status_code
                 final_url = resp.url
+                response_text = resp.text
                 host_last_request_ts[host] = time.time()
-                if resp.status_code >= 400:
+                if resp.status_code in FETCH_FALLBACK_STATUSES:
+                    fallback_url = build_jina_reader_url(url)
+                    fb_resp = session.get(fallback_url, timeout=REQUEST_TIMEOUT_SECONDS)
+                    if fb_resp.status_code < 400:
+                        fetched_via = "jina_reader"
+                        http_status = fb_resp.status_code
+                        final_url = fb_resp.url
+                        response_text = fb_resp.text
+                    else:
+                        raise requests.HTTPError(f"HTTP {resp.status_code}")
+                elif resp.status_code >= 400:
                     raise requests.HTTPError(f"HTTP {resp.status_code}")
                 parser = PageParser()
-                parser.feed(resp.text)
+                parser.feed(response_text)
                 text_blob = parser.text()
-                parse_tables(provider, final_url or url, parser.tables, text_blob, results, parse_warnings)
+                parsed_tables = list(parser.tables)
+                parsed_tables.extend(parse_markdown_tables(response_text))
+                parse_tables(
+                    provider,
+                    url if fetched_via != "direct" else (final_url or url),
+                    parsed_tables,
+                    text_blob or response_text,
+                    results,
+                    parse_warnings,
+                )
             except Exception as exc:
                 error = str(exc)
 
@@ -672,6 +777,8 @@ def crawl_sources(sources: Dict[str, List[str]]) -> Tuple[Dict[Tuple[str, str], 
                     "url": url,
                     "final_url": final_url,
                     "http_status": http_status,
+                    "fallback_url": fallback_url,
+                    "fetched_via": fetched_via,
                     "error": error,
                     "robots_error": robots_error,
                     "records_extracted": max(0, after_count - before_count),
@@ -719,6 +826,7 @@ def merge_with_existing(
                 summary[provider]["unchanged"] += 1
             merged_rows[key_to_index[key]] = row
         else:
+            crawl_note = str(crawl_row.get("notes") or "").strip()
             new_row = {
                 "provider": provider,
                 "model_id": model_id,
@@ -726,7 +834,11 @@ def merge_with_existing(
                 "deprecated_date": crawl_row.get("deprecated_date"),
                 "sunset_date": crawl_row.get("sunset_date"),
                 "replacement": crawl_row.get("replacement"),
-                "notes": crawl_row.get("notes") or "Added by crawl; verify.",
+                "notes": (
+                    f"Added by crawl; verify. {crawl_note}".strip()
+                    if crawl_note
+                    else "Added by crawl; verify."
+                ),
             }
             key_to_index[key] = len(merged_rows)
             merged_rows.append(new_row)

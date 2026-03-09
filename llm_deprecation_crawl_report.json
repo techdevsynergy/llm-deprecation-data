@@ -1,5 +1,5 @@
 {
-  "run_timestamp_utc": "2026-03-07T15:40:58Z",
+  "run_timestamp_utc": "2026-03-09T16:34:05Z",
   "user_agent": "LLMDeprecationCrawler/1.0 (compliance)",
   "sources": {
     "openai": [
@@ -8,62 +8,68 @@
       "https://platform.openai.com/docs/changelog"
     ],
     "anthropic": [
-      "https://docs.anthropic.com/en/docs/about-claude/model-deprecations",
+      "https://docs.anthropic.com/en/docs/resources/model-deprecations",
       "https://docs.anthropic.com/en/docs/about-claude/models",
-      "https://docs.anthropic.com/en/release-notes/overview",
-      "https://platform.claude.com/docs/en/about-claude/model-deprecations",
-      "https://platform.claude.com/docs/en/about-claude/models/overview"
+      "https://docs.anthropic.com/en/release-notes/overview"
     ],
     "gemini": [
-      "https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
-      "https://cloud.google.com/vertex-ai/generative-ai/docs/models",
-      "https://cloud.google.com/vertex-ai/generative-ai/docs/live-api",
-      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-pro",
-      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-flash",
-      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-pro",
-      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash",
-      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-lite",
-      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-image",
-      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-live-api",
-      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash",
-      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/1-5-pro",
-      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/1-5-flash",
-      "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/1-0-pro"
+      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
+      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models",
+      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/live-api",
+      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-pro",
+      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-flash",
+      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-1-pro",
+      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-1-flash-lite",
+      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-pro",
+      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash",
+      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-lite",
+      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-image",
+      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-live-api",
+      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash",
+      "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash-lite"
     ]
   },
   "url_results": [
     {
       "provider": "openai",
       "url": "https://platform.openai.com/docs/deprecations",
-      "final_url": "https://platform.openai.com/docs/deprecations",
-      "http_status": 403,
-      "error": "HTTP 403",
+      "final_url": "https://r.jina.ai/http://platform.openai.com/docs/deprecations",
+      "http_status": 200,
+      "fallback_url": "https://r.jina.ai/http://platform.openai.com/docs/deprecations",
+      "fetched_via": "jina_reader",
+      "error": null,
       "robots_error": null,
-      "records_extracted": 0
+      "records_extracted": 27
     },
     {
       "provider": "openai",
       "url": "https://platform.openai.com/docs/models",
-      "final_url": "https://platform.openai.com/docs/models",
-      "http_status": 403,
-      "error": "HTTP 403",
+      "final_url": "https://r.jina.ai/http://platform.openai.com/docs/models",
+      "http_status": 200,
+      "fallback_url": "https://r.jina.ai/http://platform.openai.com/docs/models",
+      "fetched_via": "jina_reader",
+      "error": null,
       "robots_error": null,
       "records_extracted": 0
     },
     {
       "provider": "openai",
       "url": "https://platform.openai.com/docs/changelog",
-      "final_url": "https://platform.openai.com/docs/changelog",
-      "http_status": 403,
-      "error": "HTTP 403",
+      "final_url": "https://r.jina.ai/http://platform.openai.com/docs/changelog",
+      "http_status": 200,
+      "fallback_url": "https://r.jina.ai/http://platform.openai.com/docs/changelog",
+      "fetched_via": "jina_reader",
+      "error": null,
       "robots_error": null,
       "records_extracted": 0
     },
     {
       "provider": "anthropic",
-      "url": "https://docs.anthropic.com/en/docs/about-claude/model-deprecations",
+      "url": "https://docs.anthropic.com/en/docs/resources/model-deprecations",
       "final_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
       "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
       "error": null,
       "robots_error": "robots HTTP 404; treated as allow",
       "records_extracted": 24
@@ -73,6 +79,8 @@
       "url": "https://docs.anthropic.com/en/docs/about-claude/models",
       "final_url": "https://platform.claude.com/docs/en/about-claude/models/overview",
       "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
       "error": null,
       "robots_error": "robots HTTP 404; treated as allow",
       "records_extracted": 0
@@ -82,156 +90,168 @@
       "url": "https://docs.anthropic.com/en/release-notes/overview",
       "final_url": "https://platform.claude.com/docs/en/release-notes/overview",
       "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
       "error": null,
       "robots_error": "robots HTTP 404; treated as allow",
       "records_extracted": 0
     },
     {
-      "provider": "anthropic",
-      "url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
-      "final_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
-      "http_status": 200,
-      "error": null,
-      "robots_error": null,
-      "records_extracted": 0
-    },
-    {
-      "provider": "anthropic",
-      "url": "https://platform.claude.com/docs/en/about-claude/models/overview",
-      "final_url": "https://platform.claude.com/docs/en/about-claude/models/overview",
-      "http_status": 200,
-      "error": null,
-      "robots_error": null,
-      "records_extracted": 0
-    },
-    {
       "provider": "gemini",
-      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
+      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
       "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
       "error": null,
       "robots_error": null,
       "records_extracted": 18
     },
     {
       "provider": "gemini",
-      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models",
+      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models",
       "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
       "error": null,
       "robots_error": null,
       "records_extracted": 0
     },
     {
       "provider": "gemini",
-      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/live-api",
+      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/live-api",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/live-api",
       "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
       "error": null,
       "robots_error": null,
       "records_extracted": 1
     },
     {
       "provider": "gemini",
-      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-pro",
+      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-pro",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-pro",
       "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
       "error": null,
       "robots_error": null,
       "records_extracted": 1
     },
     {
       "provider": "gemini",
-      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-flash",
+      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-flash",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-flash",
       "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
       "error": null,
       "robots_error": null,
       "records_extracted": 0
     },
     {
       "provider": "gemini",
-      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-pro",
+      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-1-pro",
+      "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-1-pro",
+      "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
+      "error": null,
+      "robots_error": null,
+      "records_extracted": 0
+    },
+    {
+      "provider": "gemini",
+      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-1-flash-lite",
+      "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-1-flash-lite",
+      "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
+      "error": null,
+      "robots_error": null,
+      "records_extracted": 0
+    },
+    {
+      "provider": "gemini",
+      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-pro",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-pro",
       "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
       "error": null,
       "robots_error": null,
       "records_extracted": 0
     },
     {
       "provider": "gemini",
-      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash",
+      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash",
       "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
       "error": null,
       "robots_error": null,
       "records_extracted": 0
     },
     {
       "provider": "gemini",
-      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-lite",
+      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-lite",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-lite",
       "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
       "error": null,
       "robots_error": null,
       "records_extracted": 0
     },
     {
       "provider": "gemini",
-      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-image",
+      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-image",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-image",
       "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
       "error": null,
       "robots_error": null,
       "records_extracted": 0
     },
     {
       "provider": "gemini",
-      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-live-api",
+      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-live-api",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-live-api",
       "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
       "error": null,
       "robots_error": null,
       "records_extracted": 0
     },
     {
       "provider": "gemini",
-      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash",
+      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash",
       "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash",
       "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
       "error": null,
       "robots_error": null,
       "records_extracted": 0
     },
     {
       "provider": "gemini",
-      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/1-5-pro",
-      "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/1-5-pro",
-      "http_status": 404,
-      "error": "HTTP 404",
-      "robots_error": null,
-      "records_extracted": 0
-    },
-    {
-      "provider": "gemini",
-      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/1-5-flash",
-      "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/1-5-flash",
-      "http_status": 404,
-      "error": "HTTP 404",
-      "robots_error": null,
-      "records_extracted": 0
-    },
-    {
-      "provider": "gemini",
-      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/1-0-pro",
-      "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/1-0-pro",
-      "http_status": 404,
-      "error": "HTTP 404",
+      "url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash-lite",
+      "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash-lite",
+      "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
+      "error": null,
       "robots_error": null,
       "records_extracted": 0
     }
   ],
-  "crawl_record_count": 44,
+  "crawl_record_count": 71,
   "crawl_records": [
     {
       "provider": "anthropic",
@@ -456,7 +476,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-04-21",
       "replacement": "gemini-2.0-flash-lite",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
     },
     {
       "provider": "gemini",
@@ -465,7 +485,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-04-21",
       "replacement": "gemini-2.0-flash-lite",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
     },
     {
       "provider": "gemini",
@@ -474,7 +494,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-04-21",
       "replacement": "gemini-2.0-flash",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
     },
     {
       "provider": "gemini",
@@ -483,7 +503,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-04-21",
       "replacement": "gemini-2.0-flash",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
     },
     {
       "provider": "gemini",
@@ -492,7 +512,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-04-21",
       "replacement": "gemini-2.0-flash",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
     },
     {
       "provider": "gemini",
@@ -501,7 +521,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-05-24",
       "replacement": "gemini-2.0-flash-lite",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
     },
     {
       "provider": "gemini",
@@ -510,7 +530,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-09-24",
       "replacement": "gemini-2.0-flash-lite",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
     },
     {
       "provider": "gemini",
@@ -519,7 +539,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-05-24",
       "replacement": "gemini-2.0-flash",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
     },
     {
       "provider": "gemini",
@@ -528,7 +548,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-09-24",
       "replacement": "gemini-2.0-flash",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
     },
     {
       "provider": "gemini",
@@ -555,7 +575,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-09-24",
       "replacement": "imagen-3.0-capability-001 or imagen-3.0-generate-002",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
     },
     {
       "provider": "gemini",
@@ -564,7 +584,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-09-24",
       "replacement": "imagen-3.0-capability-001 or imagen-3.0-generate-002",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
     },
     {
       "provider": "gemini",
@@ -573,7 +593,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-09-24",
       "replacement": "imagen-3.0-capability-001 or imagen-3.0-generate-002",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
     },
     {
       "provider": "gemini",
@@ -582,7 +602,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-09-24",
       "replacement": "gemini-2.5-flash-image",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
     },
     {
       "provider": "gemini",
@@ -591,7 +611,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-04-21",
       "replacement": "gemini-2.0-flash-lite",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
     },
     {
       "provider": "gemini",
@@ -600,7 +620,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-05-24",
       "replacement": "gemini-embedding-001",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
     },
     {
       "provider": "gemini",
@@ -609,7 +629,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-04-21",
       "replacement": "gemini-embedding-001",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
     },
     {
       "provider": "gemini",
@@ -618,7 +638,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-04-21",
       "replacement": "gemini-embedding-001",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
     },
     {
       "provider": "gemini",
@@ -627,14 +647,257 @@
       "deprecated_date": null,
       "sunset_date": "2025-05-24",
       "replacement": "gemini-embedding-001",
-      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: retirement + recommended upgrade table."
+      "notes": "Crawled from https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "babbage-002",
+      "status": "retired",
+      "deprecated_date": null,
+      "sunset_date": "2026-09-28",
+      "replacement": "gpt-5-mini or gpt-4.1-mini",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "codex-mini-latest",
+      "status": "retired",
+      "deprecated_date": null,
+      "sunset_date": "2026-02-12",
+      "replacement": "gpt-5-codex-mini",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "dall-e-2",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": "2026-05-12",
+      "replacement": "gpt-image-1 or gpt-image-1-mini",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "dall-e-3",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": "2026-05-12",
+      "replacement": "gpt-image-1 or gpt-image-1-mini",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "davinci-002",
+      "status": "retired",
+      "deprecated_date": null,
+      "sunset_date": "2026-09-28",
+      "replacement": "gpt-5-mini or gpt-4.1-mini",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "davinci-edit-001",
+      "status": "retired",
+      "deprecated_date": null,
+      "sunset_date": "2024-01-04",
+      "replacement": "gpt-4o",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-3.5-turbo-1106",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": "2026-09-28",
+      "replacement": "gpt-5-mini or gpt-4.1-mini",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-3.5-turbo-instruct",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": "2026-09-28",
+      "replacement": "gpt-5-mini or gpt-4.1-mini",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-4-0125-preview",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": "2026-03-26",
+      "replacement": "gpt-5 or gpt-4.1",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-4-0314",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": "2026-03-26",
+      "replacement": "gpt-5 or gpt-4.1",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-4-1106-preview",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": "2026-03-26",
+      "replacement": "gpt-5 or gpt-4.1",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-4-turbo-preview",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": "2026-03-26",
+      "replacement": "gpt-5 or gpt-4.1",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-4-turbo-preview-completions",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": "2026-03-26",
+      "replacement": "gpt-5 or gpt-4.1",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-4.5-preview",
+      "status": "retired",
+      "deprecated_date": null,
+      "sunset_date": "2025-07-14",
+      "replacement": "gpt-4.1",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-4o-audio-preview",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": "2026-03-24",
+      "replacement": "gpt-audio",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-4o-audio-preview-2024-10-01",
+      "status": "retired",
+      "deprecated_date": null,
+      "sunset_date": "2025-10-10",
+      "replacement": "gpt-audio",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-4o-mini-audio-preview",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": "2026-03-24",
+      "replacement": "gpt-audio-mini",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-4o-mini-realtime-preview",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": "2026-03-24",
+      "replacement": "gpt-realtime-mini",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-4o-realtime-preview",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": "2026-03-24",
+      "replacement": "gpt-realtime",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-4o-realtime-preview-2024-10-01",
+      "status": "retired",
+      "deprecated_date": null,
+      "sunset_date": "2025-10-10",
+      "replacement": "gpt-realtime",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-4o-realtime-preview-2024-12-17",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": "2026-03-24",
+      "replacement": "gpt-realtime",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-4o-realtime-preview-2025-06-03",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": "2026-03-24",
+      "replacement": "gpt-realtime",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "o1-mini",
+      "status": "retired",
+      "deprecated_date": null,
+      "sunset_date": "2025-10-27",
+      "replacement": "o4-mini",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "o1-preview",
+      "status": "retired",
+      "deprecated_date": null,
+      "sunset_date": "2025-07-28",
+      "replacement": "o3",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "text-moderation-007",
+      "status": "retired",
+      "deprecated_date": null,
+      "sunset_date": "2025-10-27",
+      "replacement": "omni-moderation",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "text-moderation-latest",
+      "status": "retired",
+      "deprecated_date": null,
+      "sunset_date": "2025-10-27",
+      "replacement": "omni-moderation",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "text-moderation-stable",
+      "status": "retired",
+      "deprecated_date": null,
+      "sunset_date": "2025-10-27",
+      "replacement": "omni-moderation",
+      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
     }
   ],
   "provider_summary": {
     "openai": {
-      "updated": 0,
-      "added": 0,
-      "unchanged": 76
+      "updated": 11,
+      "added": 1,
+      "unchanged": 65
     },
     "anthropic": {
       "updated": 0,
