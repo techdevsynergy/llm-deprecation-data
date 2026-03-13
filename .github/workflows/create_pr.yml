@@ -1,0 +1,25 @@
+name: Create PR for cursor/* branches
+
+on:
+  push:
+    branches:
+      - 'cursor/**'
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Create Pull Request
+        run: |
+          if ! gh pr view ${{ github.ref_name }} 2>/dev/null; then
+            gh pr create \
+              --base $(gh repo view --json defaultBranchRef -q .defaultBranchRef.name) \
+              --head ${{ github.ref_name }} \
+              --title "Cursor: ${{ github.ref_name }}" \
+              --body "Auto-generated PR for branch \`${{ github.ref_name }}\`"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
