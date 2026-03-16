@@ -12,14 +12,21 @@ jobs:
       contents: read
       pull-requests: write
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
       - name: Create Pull Request
         run: |
-          if ! gh pr view ${{ github.ref_name }} 2>/dev/null; then
+          BRANCH="${{ github.ref_name }}"
+          if ! gh pr view "$BRANCH" 2>/dev/null; then
+            BASE=$(gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
             gh pr create \
-              --base $(gh repo view --json defaultBranchRef -q .defaultBranchRef.name) \
-              --head ${{ github.ref_name }} \
-              --title "Cursor: ${{ github.ref_name }}" \
-              --body "Auto-generated PR for branch \`${{ github.ref_name }}\`"
+              --base "$BASE" \
+              --head "$BRANCH" \
+              --title "Cursor: $BRANCH" \
+              --body "Auto-generated PR for branch \`$BRANCH\`"
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
