@@ -51,8 +51,10 @@ MONTHS = {
 
 MODEL_REGEX_BY_PROVIDER = {
     "openai": re.compile(
-        r"\b(?:gpt|o[0-9]|text-embedding|text-moderation|omni-moderation|"
-        r"whisper|dall-e|sora|babbage|davinci|codex)"
+        r"\b(?:gpt|o[0-9]|"
+        r"text-(?:embedding|moderation|ada|babbage|curie|davinci|similarity|search)|"
+        r"code-(?:davinci|cushman|search)|"
+        r"omni-moderation|whisper|dall-e|sora|babbage|davinci|codex)"
         r"[a-z0-9._:@-]*\b",
         re.IGNORECASE,
     ),
@@ -88,7 +90,7 @@ def is_probable_model_id(provider: str, token: str) -> bool:
     if not token or token in {"claude", "gemini", "gpt", "model", "models"}:
         return False
     if provider == "openai":
-        return bool(re.match(r"^(gpt|o[0-9]|text-|omni-|whisper|dall-e|sora|babbage|davinci|codex)", token))
+        return bool(re.match(r"^(gpt|o[0-9]|text-|code-|omni-|whisper|dall-e|sora|babbage|davinci|codex)", token))
     if provider == "anthropic":
         return bool(re.match(r"^claude-[a-z0-9.-]+$", token))
     if provider == "gemini":
@@ -106,8 +108,12 @@ def is_probable_model_id(provider: str, token: str) -> bool:
 def extract_model_ids(text: str, provider: str) -> List[str]:
     regex = MODEL_REGEX_BY_PROVIDER[provider]
     out = []
-    for match in regex.findall(text):
-        model_id = normalize_model_id(match)
+    for match in regex.finditer(text):
+        # Prevent partial matches inside hyphenated IDs (for example
+        # matching "davinci-edit-001" inside "text-davinci-edit-001").
+        if match.start() > 0 and text[match.start() - 1] == "-":
+            continue
+        model_id = normalize_model_id(match.group(0))
         if is_probable_model_id(provider, model_id):
             out.append(model_id)
     # Preserve order while deduplicating.
