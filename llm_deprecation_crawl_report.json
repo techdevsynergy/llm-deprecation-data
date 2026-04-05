@@ -1,5 +1,5 @@
 {
-  "run_timestamp_utc": "2026-03-29T14:08:45Z",
+  "run_timestamp_utc": "2026-04-05T14:11:32Z",
   "user_agent": "LLMDeprecationCrawler/1.0 (compliance)",
   "sources": {
     "openai": [
@@ -8,12 +8,16 @@
       "https://platform.openai.com/docs/changelog"
     ],
     "anthropic": [
+      "https://docs.anthropic.com/en/docs/resources/model-deprecations",
+      "https://docs.anthropic.com/en/docs/about-claude/models",
+      "https://docs.anthropic.com/en/release-notes/overview",
       "https://platform.claude.com/docs/en/about-claude/model-deprecations",
       "https://platform.claude.com/docs/en/about-claude/models/overview",
       "https://platform.claude.com/docs/en/release-notes/overview"
     ],
     "gemini": [
       "https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
+      "https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations",
       "https://cloud.google.com/vertex-ai/generative-ai/docs/models",
       "https://cloud.google.com/vertex-ai/generative-ai/docs/live-api",
       "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-pro",
@@ -65,6 +69,39 @@
     },
     {
       "provider": "anthropic",
+      "url": "https://docs.anthropic.com/en/docs/resources/model-deprecations",
+      "final_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
+      "error": null,
+      "robots_error": "robots HTTP 404; treated as allow",
+      "records_extracted": 24
+    },
+    {
+      "provider": "anthropic",
+      "url": "https://docs.anthropic.com/en/docs/about-claude/models",
+      "final_url": "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
+      "error": null,
+      "robots_error": "robots HTTP 404; treated as allow",
+      "records_extracted": 0
+    },
+    {
+      "provider": "anthropic",
+      "url": "https://docs.anthropic.com/en/release-notes/overview",
+      "final_url": "https://platform.claude.com/docs/en/release-notes/overview",
+      "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
+      "error": null,
+      "robots_error": "robots HTTP 404; treated as allow",
+      "records_extracted": 0
+    },
+    {
+      "provider": "anthropic",
       "url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
       "final_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
       "http_status": 200,
@@ -72,7 +109,7 @@
       "fetched_via": "direct",
       "error": null,
       "robots_error": null,
-      "records_extracted": 24
+      "records_extracted": 0
     },
     {
       "provider": "anthropic",
@@ -106,6 +143,17 @@
       "error": null,
       "robots_error": null,
       "records_extracted": 18
+    },
+    {
+      "provider": "gemini",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations",
+      "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/deprecations",
+      "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
+      "error": null,
+      "robots_error": null,
+      "records_extracted": 0
     },
     {
       "provider": "gemini",
@@ -940,9 +988,9 @@
   ],
   "provider_summary": {
     "openai": {
-      "updated": 10,
+      "updated": 0,
       "added": 0,
-      "unchanged": 69
+      "unchanged": 79
     },
     "anthropic": {
       "updated": 0,
