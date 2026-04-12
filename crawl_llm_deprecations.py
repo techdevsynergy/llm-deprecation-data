@@ -567,7 +567,17 @@ def parse_tables(
             or ("shutdown date" in header_str and "recommended replacement" in header_str)
         ):
             model_idx = next(
-                (i for i, h in enumerate(header) if "model id" in h or "model / system" in h or h.strip() == "model"),
+                (
+                    i
+                    for i, h in enumerate(header)
+                    if (
+                        "model id" in h
+                        or "model / system" in h
+                        or h.strip() == "model"
+                        or "deprecated model" in h
+                        or "legacy model" in h
+                    )
+                ),
                 0,
             )
             retirement_idx = next(
