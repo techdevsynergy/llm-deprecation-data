@@ -1,19 +1,20 @@
 {
-  "run_timestamp_utc": "2026-04-12T14:13:14Z",
+  "run_timestamp_utc": "2026-04-19T14:11:34Z",
   "user_agent": "LLMDeprecationCrawler/1.0 (compliance)",
   "sources": {
     "openai": [
-      "https://platform.openai.com/docs/deprecations",
-      "https://platform.openai.com/docs/models",
-      "https://platform.openai.com/docs/changelog"
+      "https://developers.openai.com/api/docs/deprecations",
+      "https://developers.openai.com/api/docs/models",
+      "https://developers.openai.com/api/docs/changelog"
     ],
     "anthropic": [
-      "https://docs.anthropic.com/en/docs/about-claude/model-deprecations",
-      "https://docs.anthropic.com/en/docs/about-claude/models",
-      "https://docs.anthropic.com/en/release-notes/overview"
+      "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "https://platform.claude.com/docs/en/release-notes/overview"
     ],
     "gemini": [
       "https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
+      "https://cloud.google.com/vertex-ai/generative-ai/docs/release-notes",
       "https://cloud.google.com/vertex-ai/generative-ai/docs/models",
       "https://cloud.google.com/vertex-ai/generative-ai/docs/live-api",
       "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-pro",
@@ -32,68 +33,68 @@
   "url_results": [
     {
       "provider": "openai",
-      "url": "https://platform.openai.com/docs/deprecations",
-      "final_url": "https://r.jina.ai/http://platform.openai.com/docs/deprecations",
+      "url": "https://developers.openai.com/api/docs/deprecations",
+      "final_url": "https://developers.openai.com/api/docs/deprecations",
       "http_status": 200,
-      "fallback_url": "https://r.jina.ai/http://platform.openai.com/docs/deprecations",
-      "fetched_via": "jina_reader",
+      "fallback_url": null,
+      "fetched_via": "direct",
       "error": null,
       "robots_error": null,
       "records_extracted": 69
     },
     {
       "provider": "openai",
-      "url": "https://platform.openai.com/docs/models",
-      "final_url": "https://r.jina.ai/http://platform.openai.com/docs/models",
+      "url": "https://developers.openai.com/api/docs/models",
+      "final_url": "https://developers.openai.com/api/docs/models",
       "http_status": 200,
-      "fallback_url": "https://r.jina.ai/http://platform.openai.com/docs/models",
-      "fetched_via": "jina_reader",
+      "fallback_url": null,
+      "fetched_via": "direct",
       "error": null,
       "robots_error": null,
       "records_extracted": 0
     },
     {
       "provider": "openai",
-      "url": "https://platform.openai.com/docs/changelog",
-      "final_url": "https://r.jina.ai/http://platform.openai.com/docs/changelog",
+      "url": "https://developers.openai.com/api/docs/changelog",
+      "final_url": "https://developers.openai.com/api/docs/changelog",
       "http_status": 200,
-      "fallback_url": "https://r.jina.ai/http://platform.openai.com/docs/changelog",
-      "fetched_via": "jina_reader",
+      "fallback_url": null,
+      "fetched_via": "direct",
       "error": null,
       "robots_error": null,
       "records_extracted": 0
     },
     {
       "provider": "anthropic",
-      "url": "https://docs.anthropic.com/en/docs/about-claude/model-deprecations",
+      "url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
       "final_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
       "http_status": 200,
       "fallback_url": null,
       "fetched_via": "direct",
       "error": null,
-      "robots_error": "robots HTTP 404; treated as allow",
-      "records_extracted": 19
+      "robots_error": null,
+      "records_extracted": 25
     },
     {
       "provider": "anthropic",
-      "url": "https://docs.anthropic.com/en/docs/about-claude/models",
+      "url": "https://platform.claude.com/docs/en/about-claude/models/overview",
       "final_url": "https://platform.claude.com/docs/en/about-claude/models/overview",
       "http_status": 200,
       "fallback_url": null,
       "fetched_via": "direct",
       "error": null,
-      "robots_error": "robots HTTP 404; treated as allow",
+      "robots_error": null,
       "records_extracted": 0
     },
     {
       "provider": "anthropic",
-      "url": "https://docs.anthropic.com/en/release-notes/overview",
+      "url": "https://platform.claude.com/docs/en/release-notes/overview",
       "final_url": "https://platform.claude.com/docs/en/release-notes/overview",
       "http_status": 200,
       "fallback_url": null,
       "fetched_via": "direct",
       "error": null,
-      "robots_error": "robots HTTP 404; treated as allow",
+      "robots_error": null,
       "records_extracted": 0
     },
     {
@@ -106,6 +107,17 @@
       "error": null,
       "robots_error": null,
       "records_extracted": 18
+    },
+    {
+      "provider": "gemini",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/release-notes",
+      "final_url": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/release-notes",
+      "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
+      "error": null,
+      "robots_error": null,
+      "records_extracted": 0
     },
     {
       "provider": "gemini",
@@ -251,7 +263,7 @@
       "records_extracted": 0
     }
   ],
-  "crawl_record_count": 107,
+  "crawl_record_count": 113,
   "crawl_records": [
     {
       "provider": "anthropic",
@@ -295,7 +307,7 @@
       "status": "retired",
       "deprecated_date": null,
       "sunset_date": "2025-07-21",
-      "replacement": "claude-opus-4-6",
+      "replacement": "claude-opus-4-7",
       "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: deprecated model lifecycle table."
     },
     {
@@ -304,14 +316,14 @@
       "status": "retired",
       "deprecated_date": null,
       "sunset_date": "2025-07-21",
-      "replacement": "claude-opus-4-6",
+      "replacement": "claude-opus-4-7",
       "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: deprecated model lifecycle table."
     },
     {
       "provider": "anthropic",
       "model_id": "claude-3-5-haiku-20241022",
       "status": "retired",
-      "deprecated_date": null,
+      "deprecated_date": "2025-12-19",
       "sunset_date": "2026-02-19",
       "replacement": "claude-haiku-4-5-20251001",
       "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: deprecated model lifecycle table."
@@ -322,7 +334,7 @@
       "status": "retired",
       "deprecated_date": null,
       "sunset_date": "2025-10-28",
-      "replacement": "claude-opus-4-6",
+      "replacement": "claude-sonnet-4-6",
       "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: deprecated model lifecycle table."
     },
     {
@@ -331,23 +343,23 @@
       "status": "retired",
       "deprecated_date": null,
       "sunset_date": "2025-10-28",
-      "replacement": "claude-opus-4-6",
+      "replacement": "claude-sonnet-4-6",
       "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: deprecated model lifecycle table."
     },
     {
       "provider": "anthropic",
       "model_id": "claude-3-7-sonnet-20250219",
       "status": "retired",
-      "deprecated_date": null,
+      "deprecated_date": "2025-10-28",
       "sunset_date": "2026-02-19",
-      "replacement": "claude-opus-4-6",
+      "replacement": "claude-sonnet-4-6",
       "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: deprecated model lifecycle table."
     },
     {
       "provider": "anthropic",
       "model_id": "claude-3-haiku-20240307",
       "status": "deprecated",
-      "deprecated_date": null,
+      "deprecated_date": "2026-02-19",
       "sunset_date": "2026-04-20",
       "replacement": "claude-haiku-4-5-20251001",
       "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: deprecated model lifecycle table."
@@ -358,7 +370,7 @@
       "status": "retired",
       "deprecated_date": null,
       "sunset_date": "2026-01-05",
-      "replacement": "claude-opus-4-6",
+      "replacement": "claude-opus-4-7",
       "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: deprecated model lifecycle table."
     },
     {
@@ -367,8 +379,17 @@
       "status": "retired",
       "deprecated_date": null,
       "sunset_date": "2025-07-21",
-      "replacement": "claude-opus-4-6",
+      "replacement": "claude-sonnet-4-6",
       "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: deprecated model lifecycle table."
+    },
+    {
+      "provider": "anthropic",
+      "model_id": "claude-haiku-4-5-20251001",
+      "status": "active",
+      "deprecated_date": null,
+      "sunset_date": null,
+      "replacement": null,
+      "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: model status table."
     },
     {
       "provider": "anthropic",
@@ -376,7 +397,25 @@
       "status": "retired",
       "deprecated_date": null,
       "sunset_date": "2024-11-06",
-      "replacement": null,
+      "replacement": "claude-haiku-4-5-20251001",
+      "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: deprecated model lifecycle table."
+    },
+    {
+      "provider": "anthropic",
+      "model_id": "claude-instant-1.1",
+      "status": "retired",
+      "deprecated_date": null,
+      "sunset_date": "2024-11-06",
+      "replacement": "claude-haiku-4-5-20251001",
+      "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: deprecated model lifecycle table."
+    },
+    {
+      "provider": "anthropic",
+      "model_id": "claude-instant-1.2",
+      "status": "retired",
+      "deprecated_date": null,
+      "sunset_date": "2024-11-06",
+      "replacement": "claude-haiku-4-5-20251001",
       "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: deprecated model lifecycle table."
     },
     {
@@ -391,11 +430,11 @@
     {
       "provider": "anthropic",
       "model_id": "claude-opus-4-20250514",
-      "status": "active",
-      "deprecated_date": null,
-      "sunset_date": null,
-      "replacement": null,
-      "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: model status table."
+      "status": "deprecated",
+      "deprecated_date": "2026-04-14",
+      "sunset_date": "2026-06-15",
+      "replacement": "claude-opus-4-7",
+      "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: deprecated model lifecycle table."
     },
     {
       "provider": "anthropic",
@@ -409,6 +448,33 @@
     {
       "provider": "anthropic",
       "model_id": "claude-opus-4-6",
+      "status": "active",
+      "deprecated_date": null,
+      "sunset_date": null,
+      "replacement": null,
+      "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: model status table."
+    },
+    {
+      "provider": "anthropic",
+      "model_id": "claude-opus-4-7",
+      "status": "active",
+      "deprecated_date": null,
+      "sunset_date": null,
+      "replacement": null,
+      "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: model status table."
+    },
+    {
+      "provider": "anthropic",
+      "model_id": "claude-sonnet-4-20250514",
+      "status": "deprecated",
+      "deprecated_date": "2026-04-14",
+      "sunset_date": "2026-06-15",
+      "replacement": "claude-sonnet-4-6",
+      "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: deprecated model lifecycle table."
+    },
+    {
+      "provider": "anthropic",
+      "model_id": "claude-sonnet-4-5-20250929",
       "status": "active",
       "deprecated_date": null,
       "sunset_date": null,
@@ -602,7 +668,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "babbage-002",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -611,7 +677,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-09-28",
       "replacement": "gpt-5.4-mini or gpt-5-mini",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -620,7 +686,7 @@
       "deprecated_date": null,
       "sunset_date": "2023-03-23",
       "replacement": "gpt-4o",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -629,7 +695,7 @@
       "deprecated_date": null,
       "sunset_date": "2023-03-23",
       "replacement": "gpt-4o",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -638,7 +704,7 @@
       "deprecated_date": null,
       "sunset_date": "2023-03-23",
       "replacement": "gpt-4o",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -647,7 +713,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "gpt-3.5-turbo-instruct",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -656,7 +722,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "gpt-4o",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -665,7 +731,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "text-embedding-3-small",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -674,7 +740,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "text-embedding-3-small",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -683,7 +749,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "text-embedding-3-small",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -692,7 +758,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "text-embedding-3-small",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -701,7 +767,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-02-12",
       "replacement": "gpt-5-codex-mini",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -710,7 +776,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-05-12",
       "replacement": "gpt-image-1 or gpt-image-1-mini",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -719,7 +785,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-05-12",
       "replacement": "gpt-image-1 or gpt-image-1-mini",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -728,7 +794,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "davinci-002",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -737,7 +803,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-09-28",
       "replacement": "gpt-5.4-mini or gpt-5-mini",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -746,7 +812,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-09-13",
       "replacement": "gpt-3.5-turbo",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -755,7 +821,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-09-13",
       "replacement": "gpt-3.5-turbo",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -764,7 +830,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-09-28",
       "replacement": "gpt-5.4-mini or gpt-5-mini",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -773,7 +839,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-09-13",
       "replacement": "gpt-3.5-turbo",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -782,7 +848,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-09-28",
       "replacement": "gpt-5.4-mini or gpt-5-mini",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -791,7 +857,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-03-26",
       "replacement": "gpt-5 or gpt-4.1",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -800,7 +866,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-03-26",
       "replacement": "gpt-5 or gpt-4.1",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -809,7 +875,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-03-26",
       "replacement": "gpt-5 or gpt-4.1",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -818,7 +884,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-12-06",
       "replacement": "gpt-4o",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -827,7 +893,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-06-06",
       "replacement": "gpt-4o",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -836,7 +902,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-06-06",
       "replacement": "gpt-4o",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -845,7 +911,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-06-06",
       "replacement": "gpt-4o",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -854,7 +920,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-03-26",
       "replacement": "gpt-5 or gpt-4.1",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -863,7 +929,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-03-26",
       "replacement": "gpt-5 or gpt-4.1",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -872,7 +938,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-12-06",
       "replacement": "gpt-4o",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -881,7 +947,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-07-14",
       "replacement": "gpt-4.1",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -890,7 +956,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-05-07",
       "replacement": "gpt-audio-1.5",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -899,7 +965,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-10-10",
       "replacement": "gpt-audio-1.5",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -908,7 +974,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-05-07",
       "replacement": "gpt-audio-mini",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -917,7 +983,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-05-07",
       "replacement": "gpt-realtime-mini",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -926,7 +992,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-05-07",
       "replacement": "gpt-realtime-1.5",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -935,7 +1001,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-10-10",
       "replacement": "gpt-realtime-1.5",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -944,7 +1010,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-05-07",
       "replacement": "gpt-realtime-1.5",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -953,7 +1019,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-05-07",
       "replacement": "gpt-realtime-1.5",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -962,7 +1028,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-10-27",
       "replacement": "o4-mini",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -971,7 +1037,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-07-28",
       "replacement": "o3",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -980,7 +1046,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-09-24",
       "replacement": null,
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -989,7 +1055,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-09-24",
       "replacement": null,
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -998,7 +1064,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-09-24",
       "replacement": null,
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1007,7 +1073,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-09-24",
       "replacement": null,
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1016,7 +1082,7 @@
       "deprecated_date": null,
       "sunset_date": "2026-09-24",
       "replacement": null,
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1025,7 +1091,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "gpt-3.5-turbo-instruct",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1034,7 +1100,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "gpt-3.5-turbo-instruct",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1043,7 +1109,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "gpt-3.5-turbo-instruct",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1052,7 +1118,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "gpt-3.5-turbo-instruct",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1061,7 +1127,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "gpt-3.5-turbo-instruct",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1070,7 +1136,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "gpt-3.5-turbo-instruct",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1079,7 +1145,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "gpt-4o",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1088,7 +1154,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-10-27",
       "replacement": "omni-moderation",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1097,7 +1163,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-10-27",
       "replacement": "omni-moderation",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1106,7 +1172,7 @@
       "deprecated_date": null,
       "sunset_date": "2025-10-27",
       "replacement": "omni-moderation",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1115,7 +1181,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "text-embedding-3-small",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1124,7 +1190,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "text-embedding-3-small",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1133,7 +1199,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "text-embedding-3-small",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1142,7 +1208,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "text-embedding-3-small",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1151,7 +1217,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "text-embedding-3-small",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1160,7 +1226,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "text-embedding-3-small",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1169,7 +1235,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "text-embedding-3-small",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1178,7 +1244,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "text-embedding-3-small",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1187,7 +1253,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "text-embedding-3-small",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1196,7 +1262,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "text-embedding-3-small",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1205,7 +1271,7 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "text-embedding-3-small",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
       "provider": "openai",
@@ -1214,19 +1280,19 @@
       "deprecated_date": null,
       "sunset_date": "2024-01-04",
       "replacement": "text-embedding-3-small",
-      "notes": "Crawled from https://platform.openai.com/docs/deprecations: lifecycle table."
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     }
   ],
   "provider_summary": {
     "openai": {
-      "updated": 1,
-      "added": 25,
-      "unchanged": 78
-    },
-    "anthropic": {
       "updated": 0,
       "added": 0,
-      "unchanged": 30
+      "unchanged": 104
+    },
+    "anthropic": {
+      "updated": 9,
+      "added": 1,
+      "unchanged": 21
     },
     "gemini": {
       "updated": 0,
