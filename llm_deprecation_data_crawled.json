@@ -89,7 +89,7 @@
   {"provider": "anthropic", "model_id": "claude-opus-4-0", "status": "active", "deprecated_date": null, "sunset_date": null, "replacement": null, "notes": "Opus 4 alias."},
   {"provider": "anthropic", "model_id": "claude-sonnet-4-20250514", "status": "deprecated", "deprecated_date": "2026-04-14", "sunset_date": "2026-06-15", "replacement": "claude-sonnet-4-6", "notes": "Sonnet 4 snapshot."},
   {"provider": "anthropic", "model_id": "claude-sonnet-4-0", "status": "active", "deprecated_date": null, "sunset_date": null, "replacement": null, "notes": "Sonnet 4 alias."},
-  {"provider": "anthropic", "model_id": "claude-3-haiku-20240307", "status": "deprecated", "deprecated_date": "2026-02-19", "sunset_date": "2026-04-20", "replacement": "claude-haiku-4-5-20251001", "notes": "Claude Haiku 3; migrate to Haiku 4.5."},
+  {"provider": "anthropic", "model_id": "claude-3-haiku-20240307", "status": "retired", "deprecated_date": "2026-02-19", "sunset_date": "2026-04-20", "replacement": "claude-haiku-4-5-20251001", "notes": "Claude Haiku 3; migrate to Haiku 4.5."},
   {"provider": "anthropic", "model_id": "claude-3-7-sonnet-20250219", "status": "retired", "deprecated_date": "2025-10-28", "sunset_date": "2026-02-19", "replacement": "claude-sonnet-4-6", "notes": "Claude Sonnet 3.7; retired."},
   {"provider": "anthropic", "model_id": "claude-3-5-haiku-20241022", "status": "retired", "deprecated_date": "2025-12-19", "sunset_date": "2026-02-19", "replacement": "claude-haiku-4-5-20251001", "notes": "Claude Haiku 3.5; retired."},
   {"provider": "anthropic", "model_id": "claude-3-5-sonnet-20240620", "status": "retired", "deprecated_date": null, "sunset_date": "2025-10-28", "replacement": "claude-sonnet-4-6", "notes": "Claude Sonnet 3.5; retired."},
