@@ -631,6 +631,15 @@ def parse_tables(
                     continue
                 retirement = row[retirement_idx] if retirement_idx is not None and retirement_idx < len(row) else ""
                 sunset = parse_date_yyyy_mm_dd(retirement)
+                retirement_l = retirement.lower()
+                no_shutdown_announced = any(
+                    phrase in retirement_l
+                    for phrase in (
+                        "no shutdown date announced",
+                        "no retirement date announced",
+                        "no discontinuation date announced",
+                    )
+                )
                 replacement = row[repl_idx] if repl_idx is not None and repl_idx < len(row) else ""
                 replacement_norm = extract_replacement("recommended upgrade " + replacement, provider) or (
                     " or ".join(extract_model_ids(replacement, provider))
@@ -642,7 +651,7 @@ def parse_tables(
                     else None
                 )
                 for model_id in model_ids:
-                    status = choose_status("deprecated retirement", sunset)
+                    status = "active" if no_shutdown_announced else choose_status("deprecated retirement", sunset)
                     merge_candidate(
                         store=out,
                         provider=provider,
