@@ -614,14 +614,32 @@ def parse_tables(
             for row in table[1:]:
                 if model_idx >= len(row):
                     continue
-                model_ids = extract_model_ids(row[model_idx], provider)
+                model_text = row[model_idx]
+                extra_replacement_text = ""
+                if (
+                    provider == "openai"
+                    and "model snapshot" in header_str
+                    and " | " in model_text
+                ):
+                    # Some OpenAI rows include an alias/current model in the
+                    # same parsed cell. Only the first segment is deprecated.
+                    model_text, extra_replacement_text = [
+                        part.strip() for part in model_text.split(" | ", 1)
+                    ]
+                model_ids = extract_model_ids(model_text, provider)
                 if not model_ids:
                     continue
                 retirement = row[retirement_idx] if retirement_idx is not None and retirement_idx < len(row) else ""
                 sunset = parse_date_yyyy_mm_dd(retirement)
                 replacement = row[repl_idx] if repl_idx is not None and repl_idx < len(row) else ""
                 replacement_norm = extract_replacement("recommended upgrade " + replacement, provider) or (
-                    " or ".join(extract_model_ids(replacement, provider)) if extract_model_ids(replacement, provider) else None
+                    " or ".join(extract_model_ids(replacement, provider))
+                    if extract_model_ids(replacement, provider)
+                    else None
+                ) or (
+                    " or ".join(extract_model_ids(extra_replacement_text, provider))
+                    if extra_replacement_text and extract_model_ids(extra_replacement_text, provider)
+                    else None
                 )
                 for model_id in model_ids:
                     status = choose_status("deprecated retirement", sunset)
