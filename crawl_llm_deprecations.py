@@ -54,7 +54,7 @@ MODEL_REGEX_BY_PROVIDER = {
         r"\b(?:gpt|o[0-9]|"
         r"text-(?:embedding|moderation|ada|babbage|curie|davinci|similarity|search)|"
         r"code-(?:davinci|cushman|search)|"
-        r"omni-moderation|whisper|dall-e|sora|babbage|davinci|codex|"
+        r"omni-moderation|whisper|dall-e|sora|babbage|davinci|codex|chatgpt|"
         r"computer-use|ft-[a-z0-9])"
         r"[a-z0-9._:@-]*\b",
         re.IGNORECASE,
@@ -94,7 +94,7 @@ def is_probable_model_id(provider: str, token: str) -> bool:
         return bool(
             re.match(
                 r"^(gpt|o[0-9]|text-|code-|omni-|whisper|dall-e|sora|"
-                r"babbage|davinci|codex|computer-use|ft-)",
+                r"babbage|davinci|codex|chatgpt|computer-use|ft-)",
                 token,
             )
         )
@@ -571,7 +571,14 @@ def parse_tables(
         # Model ID | Release date | Retirement date | Recommended upgrade
         if (
             ("recommended upgrade" in header_str and "retirement date" in header_str)
-            or ("shutdown date" in header_str and "recommended replacement" in header_str)
+            or (
+                "shutdown date" in header_str
+                and (
+                    "recommended replacement" in header_str
+                    or "substitute model" in header_str
+                    or "replacement base model" in header_str
+                )
+            )
         ):
             model_idx = next(
                 (
@@ -580,6 +587,7 @@ def parse_tables(
                     if (
                         "model id" in h
                         or "model / system" in h
+                        or "model snapshot" in h
                         or h.strip() == "model"
                         or "deprecated model" in h
                         or "legacy model" in h
@@ -596,7 +604,11 @@ def parse_tables(
                 None,
             )
             repl_idx = next(
-                (i for i, h in enumerate(header) if "recommended upgrade" in h or "replacement" in h),
+                (
+                    i
+                    for i, h in enumerate(header)
+                    if "recommended upgrade" in h or "replacement" in h or "substitute model" in h
+                ),
                 None,
             )
             for row in table[1:]:
