@@ -54,7 +54,8 @@ MODEL_REGEX_BY_PROVIDER = {
         r"\b(?:gpt|o[0-9]|"
         r"text-(?:embedding|moderation|ada|babbage|curie|davinci|similarity|search)|"
         r"code-(?:davinci|cushman|search)|"
-        r"omni-moderation|whisper|dall-e|sora|babbage|davinci|codex)"
+        r"omni-moderation|whisper|dall-e|sora|babbage|davinci|codex|chatgpt|"
+        r"computer-use|ft-[a-z0-9])"
         r"[a-z0-9._:@-]*\b",
         re.IGNORECASE,
     ),
@@ -90,7 +91,13 @@ def is_probable_model_id(provider: str, token: str) -> bool:
     if not token or token in {"claude", "gemini", "gpt", "model", "models"}:
         return False
     if provider == "openai":
-        return bool(re.match(r"^(gpt|o[0-9]|text-|code-|omni-|whisper|dall-e|sora|babbage|davinci|codex)", token))
+        return bool(
+            re.match(
+                r"^(gpt|o[0-9]|text-|code-|omni-|whisper|dall-e|sora|"
+                r"babbage|davinci|codex|chatgpt|computer-use|ft-)",
+                token,
+            )
+        )
     if provider == "anthropic":
         return bool(re.match(r"^claude-[a-z0-9.-]+$", token))
     if provider == "gemini":
@@ -564,7 +571,14 @@ def parse_tables(
         # Model ID | Release date | Retirement date | Recommended upgrade
         if (
             ("recommended upgrade" in header_str and "retirement date" in header_str)
-            or ("shutdown date" in header_str and "recommended replacement" in header_str)
+            or (
+                "shutdown date" in header_str
+                and (
+                    "recommended replacement" in header_str
+                    or "substitute model" in header_str
+                    or "replacement base model" in header_str
+                )
+            )
         ):
             model_idx = next(
                 (
@@ -573,6 +587,7 @@ def parse_tables(
                     if (
                         "model id" in h
                         or "model / system" in h
+                        or "model snapshot" in h
                         or h.strip() == "model"
                         or "deprecated model" in h
                         or "legacy model" in h
@@ -589,23 +604,54 @@ def parse_tables(
                 None,
             )
             repl_idx = next(
-                (i for i, h in enumerate(header) if "recommended upgrade" in h or "replacement" in h),
+                (
+                    i
+                    for i, h in enumerate(header)
+                    if "recommended upgrade" in h or "replacement" in h or "substitute model" in h
+                ),
                 None,
             )
             for row in table[1:]:
                 if model_idx >= len(row):
                     continue
-                model_ids = extract_model_ids(row[model_idx], provider)
+                model_text = row[model_idx]
+                extra_replacement_text = ""
+                if (
+                    provider == "openai"
+                    and "model snapshot" in header_str
+                    and " | " in model_text
+                ):
+                    # Some OpenAI rows include an alias/current model in the
+                    # same parsed cell. Only the first segment is deprecated.
+                    model_text, extra_replacement_text = [
+                        part.strip() for part in model_text.split(" | ", 1)
+                    ]
+                model_ids = extract_model_ids(model_text, provider)
                 if not model_ids:
                     continue
                 retirement = row[retirement_idx] if retirement_idx is not None and retirement_idx < len(row) else ""
                 sunset = parse_date_yyyy_mm_dd(retirement)
+                retirement_l = retirement.lower()
+                no_shutdown_announced = any(
+                    phrase in retirement_l
+                    for phrase in (
+                        "no shutdown date announced",
+                        "no retirement date announced",
+                        "no discontinuation date announced",
+                    )
+                )
                 replacement = row[repl_idx] if repl_idx is not None and repl_idx < len(row) else ""
                 replacement_norm = extract_replacement("recommended upgrade " + replacement, provider) or (
-                    " or ".join(extract_model_ids(replacement, provider)) if extract_model_ids(replacement, provider) else None
+                    " or ".join(extract_model_ids(replacement, provider))
+                    if extract_model_ids(replacement, provider)
+                    else None
+                ) or (
+                    " or ".join(extract_model_ids(extra_replacement_text, provider))
+                    if extra_replacement_text and extract_model_ids(extra_replacement_text, provider)
+                    else None
                 )
                 for model_id in model_ids:
-                    status = choose_status("deprecated retirement", sunset)
+                    status = "active" if no_shutdown_announced else choose_status("deprecated retirement", sunset)
                     merge_candidate(
                         store=out,
                         provider=provider,
