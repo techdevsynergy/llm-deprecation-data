@@ -54,7 +54,8 @@ MODEL_REGEX_BY_PROVIDER = {
         r"\b(?:gpt|o[0-9]|"
         r"text-(?:embedding|moderation|ada|babbage|curie|davinci|similarity|search)|"
         r"code-(?:davinci|cushman|search)|"
-        r"omni-moderation|whisper|dall-e|sora|babbage|davinci|codex)"
+        r"omni-moderation|whisper|dall-e|sora|babbage|davinci|codex|"
+        r"computer-use|ft-[a-z0-9])"
         r"[a-z0-9._:@-]*\b",
         re.IGNORECASE,
     ),
@@ -90,7 +91,13 @@ def is_probable_model_id(provider: str, token: str) -> bool:
     if not token or token in {"claude", "gemini", "gpt", "model", "models"}:
         return False
     if provider == "openai":
-        return bool(re.match(r"^(gpt|o[0-9]|text-|code-|omni-|whisper|dall-e|sora|babbage|davinci|codex)", token))
+        return bool(
+            re.match(
+                r"^(gpt|o[0-9]|text-|code-|omni-|whisper|dall-e|sora|"
+                r"babbage|davinci|codex|computer-use|ft-)",
+                token,
+            )
+        )
     if provider == "anthropic":
         return bool(re.match(r"^claude-[a-z0-9.-]+$", token))
     if provider == "gemini":
