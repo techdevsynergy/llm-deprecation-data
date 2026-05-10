@@ -1,18 +1,17 @@
 {
   "openai": [
-    "https://developers.openai.com/api/docs/deprecations",
-    "https://developers.openai.com/api/docs/models",
-    "https://developers.openai.com/api/docs/changelog"
+    "https://platform.openai.com/docs/deprecations",
+    "https://platform.openai.com/docs/models",
+    "https://platform.openai.com/docs/changelog"
   ],
   "anthropic": [
-    "https://docs.anthropic.com/en/docs/resources/model-deprecations",
+    "https://docs.anthropic.com/en/docs/about-claude/model-deprecations",
     "https://docs.anthropic.com/en/docs/about-claude/models/overview",
-    "https://docs.anthropic.com/en/release-notes/overview",
-    "https://platform.claude.com/docs/en/about-claude/model-deprecations",
-    "https://platform.claude.com/docs/en/about-claude/models/overview",
-    "https://platform.claude.com/docs/en/release-notes/overview"
+    "https://docs.anthropic.com/en/release-notes/overview"
   ],
   "gemini": [
+    "https://ai.google.dev/gemini-api/docs/deprecations",
+    "https://ai.google.dev/gemini-api/docs/changelog",
     "https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions",
     "https://cloud.google.com/vertex-ai/generative-ai/docs/migrate",
     "https://cloud.google.com/vertex-ai/generative-ai/docs/release-notes",
@@ -28,6 +27,9 @@
     "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-image",
     "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-live-api",
     "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash",
-    "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash-lite"
+    "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-0-flash-lite",
+    "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/1-5-pro",
+    "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/1-5-flash",
+    "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/1-0-pro"
   ]
 }
