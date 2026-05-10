@@ -36,25 +36,37 @@ STATUS_PRIORITY = {"active": 0, "legacy": 1, "deprecated": 2, "retired": 3}
 
 MONTHS = {
     "january": 1,
+    "jan": 1,
     "february": 2,
+    "feb": 2,
     "march": 3,
+    "mar": 3,
     "april": 4,
+    "apr": 4,
     "may": 5,
     "june": 6,
+    "jun": 6,
     "july": 7,
+    "jul": 7,
     "august": 8,
+    "aug": 8,
     "september": 9,
+    "sep": 9,
+    "sept": 9,
     "october": 10,
+    "oct": 10,
     "november": 11,
+    "nov": 11,
     "december": 12,
+    "dec": 12,
 }
 
 MODEL_REGEX_BY_PROVIDER = {
     "openai": re.compile(
-        r"\b(?:gpt|o[0-9]|"
+        r"\b(?:gpt|ft-(?:gpt|o[0-9]|babbage|davinci)|o[0-9]|"
         r"text-(?:embedding|moderation|ada|babbage|curie|davinci|similarity|search)|"
         r"code-(?:davinci|cushman|search)|"
-        r"omni-moderation|whisper|dall-e|sora|babbage|davinci|codex)"
+        r"computer-use|omni-moderation|whisper|dall-e|sora|babbage|davinci|codex)"
         r"[a-z0-9._:@-]*\b",
         re.IGNORECASE,
     ),
@@ -62,7 +74,8 @@ MODEL_REGEX_BY_PROVIDER = {
     "gemini": re.compile(
         r"\b(?:gemini|veo|nano-banana|imagen|imagetext|virtual-try-on|"
         r"textembedding-gecko|imagegeneration|text-bison|chat-bison|code-gecko|"
-        r"gemini-embedding|text-embedding)"
+        r"gemini-embedding|text-embedding|text-multilingual-embedding|"
+        r"embedding-gecko|embedding|multimodalembedding|lyria)"
         r"[a-z0-9._:@-]*\*?\b",
         re.IGNORECASE,
     ),
@@ -90,7 +103,13 @@ def is_probable_model_id(provider: str, token: str) -> bool:
     if not token or token in {"claude", "gemini", "gpt", "model", "models"}:
         return False
     if provider == "openai":
-        return bool(re.match(r"^(gpt|o[0-9]|text-|code-|omni-|whisper|dall-e|sora|babbage|davinci|codex)", token))
+        return bool(
+            re.match(
+                r"^(gpt|ft-(?:gpt|o[0-9]|babbage|davinci)|o[0-9]|text-|code-|"
+                r"computer-use|omni-|whisper|dall-e|sora|babbage|davinci|codex)",
+                token,
+            )
+        )
     if provider == "anthropic":
         return bool(re.match(r"^claude-[a-z0-9.-]+$", token))
     if provider == "gemini":
@@ -98,7 +117,8 @@ def is_probable_model_id(provider: str, token: str) -> bool:
             re.match(
                 r"^(gemini-|veo-|nano-banana|imagen|imagetext|virtual-try-on|"
                 r"textembedding-gecko|imagegeneration|text-bison|chat-bison|"
-                r"code-gecko|gemini-embedding|text-embedding)",
+                r"code-gecko|gemini-embedding|text-embedding|text-multilingual-embedding|"
+                r"embedding-gecko|embedding|multimodalembedding|lyria)",
                 token,
             )
         )
@@ -302,6 +322,12 @@ def parse_markdown_tables(markdown_text: str) -> List[List[List[str]]]:
             row_cells = split_row(row_line)
             if len(row_cells) < len(header_cells):
                 row_cells.extend([""] * (len(header_cells) - len(row_cells)))
+            elif len(row_cells) > len(header_cells):
+                # Some docs render multiple replacement links as extra markdown cells.
+                # Preserve that data by folding surplus cells into the last column.
+                row_cells = row_cells[: len(header_cells) - 1] + [
+                    " ".join(c for c in row_cells[len(header_cells) - 1 :] if c)
+                ]
             table.append(row_cells[: len(header_cells)])
             j += 1
 
@@ -565,6 +591,7 @@ def parse_tables(
         if (
             ("recommended upgrade" in header_str and "retirement date" in header_str)
             or ("shutdown date" in header_str and "recommended replacement" in header_str)
+            or ("shutdown date" in header_str and "substitute model" in header_str)
         ):
             model_idx = next(
                 (
@@ -574,6 +601,7 @@ def parse_tables(
                         "model id" in h
                         or "model / system" in h
                         or h.strip() == "model"
+                        or "model snapshot" in h
                         or "deprecated model" in h
                         or "legacy model" in h
                     )
@@ -589,7 +617,11 @@ def parse_tables(
                 None,
             )
             repl_idx = next(
-                (i for i, h in enumerate(header) if "recommended upgrade" in h or "replacement" in h),
+                (
+                    i
+                    for i, h in enumerate(header)
+                    if "recommended upgrade" in h or "replacement" in h or "substitute model" in h
+                ),
                 None,
             )
             for row in table[1:]:
@@ -600,12 +632,28 @@ def parse_tables(
                     continue
                 retirement = row[retirement_idx] if retirement_idx is not None and retirement_idx < len(row) else ""
                 sunset = parse_date_yyyy_mm_dd(retirement)
+                if retirement and not sunset and "no " not in retirement.lower():
+                    for model_id in model_ids:
+                        parse_warnings.append(f"{provider}:{model_id} lifecycle row missing parseable date ({url})")
                 replacement = row[repl_idx] if repl_idx is not None and repl_idx < len(row) else ""
                 replacement_norm = extract_replacement("recommended upgrade " + replacement, provider) or (
                     " or ".join(extract_model_ids(replacement, provider)) if extract_model_ids(replacement, provider) else None
                 )
                 for model_id in model_ids:
-                    status = choose_status("deprecated retirement", sunset)
+                    retirement_l = retirement.lower()
+                    if sunset:
+                        status = choose_status("deprecated retirement", sunset)
+                    elif any(
+                        phrase in retirement_l
+                        for phrase in [
+                            "no shutdown date announced",
+                            "no shut down date announced",
+                            "no retirement date announced",
+                        ]
+                    ):
+                        status = "active"
+                    else:
+                        status = "deprecated"
                     merge_candidate(
                         store=out,
                         provider=provider,
