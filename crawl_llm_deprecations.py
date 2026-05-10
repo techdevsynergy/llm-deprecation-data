@@ -640,7 +640,20 @@ def parse_tables(
                     " or ".join(extract_model_ids(replacement, provider)) if extract_model_ids(replacement, provider) else None
                 )
                 for model_id in model_ids:
-                    status = choose_status("deprecated retirement", sunset)
+                    retirement_l = retirement.lower()
+                    if sunset:
+                        status = choose_status("deprecated retirement", sunset)
+                    elif any(
+                        phrase in retirement_l
+                        for phrase in [
+                            "no shutdown date announced",
+                            "no shut down date announced",
+                            "no retirement date announced",
+                        ]
+                    ):
+                        status = "active"
+                    else:
+                        status = "deprecated"
                     merge_candidate(
                         store=out,
                         provider=provider,
