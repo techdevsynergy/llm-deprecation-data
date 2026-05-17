@@ -36,22 +36,35 @@ STATUS_PRIORITY = {"active": 0, "legacy": 1, "deprecated": 2, "retired": 3}
 
 MONTHS = {
     "january": 1,
+    "jan": 1,
     "february": 2,
+    "feb": 2,
     "march": 3,
+    "mar": 3,
     "april": 4,
+    "apr": 4,
     "may": 5,
     "june": 6,
+    "jun": 6,
     "july": 7,
+    "jul": 7,
     "august": 8,
+    "aug": 8,
     "september": 9,
+    "sep": 9,
+    "sept": 9,
     "october": 10,
+    "oct": 10,
     "november": 11,
+    "nov": 11,
     "december": 12,
+    "dec": 12,
 }
 
 MODEL_REGEX_BY_PROVIDER = {
     "openai": re.compile(
         r"\b(?:gpt|o[0-9]|"
+        r"computer-use-preview|ft-(?:gpt|babbage|davinci|o[0-9])|"
         r"text-(?:embedding|moderation|ada|babbage|curie|davinci|similarity|search)|"
         r"code-(?:davinci|cushman|search)|"
         r"omni-moderation|whisper|dall-e|sora|babbage|davinci|codex)"
@@ -62,7 +75,7 @@ MODEL_REGEX_BY_PROVIDER = {
     "gemini": re.compile(
         r"\b(?:gemini|veo|nano-banana|imagen|imagetext|virtual-try-on|"
         r"textembedding-gecko|imagegeneration|text-bison|chat-bison|code-gecko|"
-        r"gemini-embedding|text-embedding)"
+        r"gemini-embedding|text-embedding|text-multilingual-embedding|multimodalembedding)"
         r"[a-z0-9._:@-]*\*?\b",
         re.IGNORECASE,
     ),
@@ -90,7 +103,13 @@ def is_probable_model_id(provider: str, token: str) -> bool:
     if not token or token in {"claude", "gemini", "gpt", "model", "models"}:
         return False
     if provider == "openai":
-        return bool(re.match(r"^(gpt|o[0-9]|text-|code-|omni-|whisper|dall-e|sora|babbage|davinci|codex)", token))
+        return bool(
+            re.match(
+                r"^(gpt|o[0-9]|computer-use-preview|ft-|text-|code-|omni-|"
+                r"whisper|dall-e|sora|babbage|davinci|codex)",
+                token,
+            )
+        )
     if provider == "anthropic":
         return bool(re.match(r"^claude-[a-z0-9.-]+$", token))
     if provider == "gemini":
@@ -98,7 +117,8 @@ def is_probable_model_id(provider: str, token: str) -> bool:
             re.match(
                 r"^(gemini-|veo-|nano-banana|imagen|imagetext|virtual-try-on|"
                 r"textembedding-gecko|imagegeneration|text-bison|chat-bison|"
-                r"code-gecko|gemini-embedding|text-embedding)",
+                r"code-gecko|gemini-embedding|text-embedding|"
+                r"text-multilingual-embedding|multimodalembedding)",
                 token,
             )
         )
@@ -137,7 +157,19 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
     )
     s = " ".join(s.strip().split())
     sl = s.lower()
-    if any(x in sl for x in ["n/a", "no retirement date announced", "unknown", "tbd"]):
+    if any(
+        x in sl
+        for x in [
+            "n/a",
+            "no retirement date announced",
+            "unknown",
+            "tbd",
+            "not before",
+            "not sooner than",
+            "no earlier than",
+            "at earliest",
+        ]
+    ):
         return None
 
     # YYYY-MM-DD
@@ -214,6 +246,13 @@ def extract_replacement(text: str, provider: str) -> Optional[str]:
             if is_probable_model_id(provider, cand):
                 return cand
     return None
+
+
+def extract_replacement_cell(text: str, provider: str) -> Optional[str]:
+    model_ids = extract_model_ids(text, provider)
+    if model_ids:
+        return " or ".join(model_ids)
+    return extract_replacement("recommended replacement " + text, provider)
 
 
 def later_date(a: Optional[str], b: Optional[str]) -> Optional[str]:
@@ -562,9 +601,11 @@ def parse_tables(
 
         # OpenAI or Gemini style lifecycle table:
         # Model ID | Release date | Retirement date | Recommended upgrade
+        # Shutdown date | Model snapshot | Substitute model
         if (
             ("recommended upgrade" in header_str and "retirement date" in header_str)
             or ("shutdown date" in header_str and "recommended replacement" in header_str)
+            or ("shutdown date" in header_str and "substitute model" in header_str)
         ):
             model_idx = next(
                 (
@@ -573,6 +614,7 @@ def parse_tables(
                     if (
                         "model id" in h
                         or "model / system" in h
+                        or "model snapshot" in h
                         or h.strip() == "model"
                         or "deprecated model" in h
                         or "legacy model" in h
@@ -589,7 +631,11 @@ def parse_tables(
                 None,
             )
             repl_idx = next(
-                (i for i, h in enumerate(header) if "recommended upgrade" in h or "replacement" in h),
+                (
+                    i
+                    for i, h in enumerate(header)
+                    if "recommended upgrade" in h or "replacement" in h or "substitute model" in h
+                ),
                 None,
             )
             for row in table[1:]:
@@ -601,9 +647,7 @@ def parse_tables(
                 retirement = row[retirement_idx] if retirement_idx is not None and retirement_idx < len(row) else ""
                 sunset = parse_date_yyyy_mm_dd(retirement)
                 replacement = row[repl_idx] if repl_idx is not None and repl_idx < len(row) else ""
-                replacement_norm = extract_replacement("recommended upgrade " + replacement, provider) or (
-                    " or ".join(extract_model_ids(replacement, provider)) if extract_model_ids(replacement, provider) else None
-                )
+                replacement_norm = extract_replacement_cell(replacement, provider)
                 for model_id in model_ids:
                     status = choose_status("deprecated retirement", sunset)
                     merge_candidate(
@@ -615,6 +659,37 @@ def parse_tables(
                         sunset_date=sunset,
                         replacement=replacement_norm,
                         notes=f"Crawled from {url}: lifecycle table.",
+                        source_url=url,
+                    )
+            continue
+
+        # Google model versions table:
+        # Model ID | Release date | Retirement date
+        if "model id" in header_str and "retirement date" in header_str:
+            model_idx = next((i for i, h in enumerate(header) if "model id" in h or h.strip() == "model"), 0)
+            retirement_idx = next((i for i, h in enumerate(header) if "retirement date" in h), None)
+            repl_idx = next((i for i, h in enumerate(header) if "replacement" in h or "upgrade" in h), None)
+            for row in table[1:]:
+                if model_idx >= len(row):
+                    continue
+                model_ids = extract_model_ids(row[model_idx], provider)
+                if not model_ids:
+                    continue
+                retirement = row[retirement_idx] if retirement_idx is not None and retirement_idx < len(row) else ""
+                sunset = parse_date_yyyy_mm_dd(retirement)
+                replacement = row[repl_idx] if repl_idx is not None and repl_idx < len(row) else ""
+                replacement_norm = extract_replacement_cell(replacement, provider)
+                status = choose_status("retirement", sunset) if sunset else "active"
+                for model_id in model_ids:
+                    merge_candidate(
+                        store=out,
+                        provider=provider,
+                        model_id=model_id,
+                        status=status,
+                        deprecated_date=None,
+                        sunset_date=sunset,
+                        replacement=replacement_norm,
+                        notes=f"Crawled from {url}: model lifecycle table.",
                         source_url=url,
                     )
             continue
