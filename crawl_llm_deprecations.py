@@ -694,10 +694,15 @@ def parse_tables(
                     continue
                 lifecycle_text = row[lifecycle_idx] if lifecycle_idx is not None and lifecycle_idx < len(row) else ""
                 sunset = parse_date_yyyy_mm_dd(lifecycle_text)
-                state_text = row[status_idx] if status_idx is not None and status_idx < len(row) else header_str
+                state_text = row[status_idx] if status_idx is not None and status_idx < len(row) else ""
                 replacement = row[repl_idx] if repl_idx is not None and repl_idx < len(row) else ""
                 replacement_norm = normalize_replacement(replacement, provider)
-                status = choose_status(state_text, sunset)
+                if status_idx is not None:
+                    status = choose_status(state_text, sunset)
+                elif sunset:
+                    status = "retired" if sunset < date.today().strftime("%Y-%m-%d") else "deprecated"
+                else:
+                    status = "active"
                 if not sunset and status == "active" and not replacement_norm:
                     # Active lifecycle rows with no announced date are still useful
                     # only when they appear in dedicated status/model-version tables.
