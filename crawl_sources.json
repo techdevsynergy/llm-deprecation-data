@@ -2,10 +2,11 @@
   "openai": [
     "https://developers.openai.com/api/docs/deprecations",
     "https://developers.openai.com/api/docs/models",
+    "https://developers.openai.com/api/docs/models/all",
     "https://developers.openai.com/api/docs/changelog"
   ],
   "anthropic": [
-    "https://docs.anthropic.com/en/docs/resources/model-deprecations",
+    "https://docs.anthropic.com/en/docs/about-claude/model-deprecations",
     "https://docs.anthropic.com/en/docs/about-claude/models/overview",
     "https://docs.anthropic.com/en/release-notes/overview",
     "https://platform.claude.com/docs/en/about-claude/model-deprecations",
