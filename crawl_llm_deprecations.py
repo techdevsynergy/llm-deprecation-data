@@ -47,7 +47,21 @@ MONTHS = {
     "october": 10,
     "november": 11,
     "december": 12,
+    "jan": 1,
+    "feb": 2,
+    "mar": 3,
+    "apr": 4,
+    "may": 5,
+    "jun": 6,
+    "jul": 7,
+    "aug": 8,
+    "sep": 9,
+    "sept": 9,
+    "oct": 10,
+    "nov": 11,
+    "dec": 12,
 }
+MONTH_NAME_PATTERN = "|".join(sorted(MONTHS.keys(), key=len, reverse=True))
 
 MODEL_REGEX_BY_PROVIDER = {
     "openai": re.compile(
@@ -151,7 +165,7 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
 
     # Month DD, YYYY  OR Month DD YYYY
     m = re.search(
-        r"\b(" + "|".join(MONTHS.keys()) + r")\s+(\d{1,2})(?:,)?\s+(20\d{2})\b",
+        r"\b(" + MONTH_NAME_PATTERN + r")\.?\s+(\d{1,2})(?:,)?\s+(20\d{2})\b",
         sl,
     )
     if m:
@@ -165,7 +179,7 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
 
     # DD Month YYYY
     m = re.search(
-        r"\b(\d{1,2})\s+(" + "|".join(MONTHS.keys()) + r")(?:,)?\s+(20\d{2})\b",
+        r"\b(\d{1,2})\s+(" + MONTH_NAME_PATTERN + r")\.?(?:,)?\s+(20\d{2})\b",
         sl,
     )
     if m:
@@ -562,10 +576,15 @@ def parse_tables(
 
         # OpenAI or Gemini style lifecycle table:
         # Model ID | Release date | Retirement date | Recommended upgrade
-        if (
-            ("recommended upgrade" in header_str and "retirement date" in header_str)
-            or ("shutdown date" in header_str and "recommended replacement" in header_str)
-        ):
+        lifecycle_date_header = any(
+            h in header_str
+            for h in ("retirement date", "discontinuation date", "shutdown date", "sunset")
+        )
+        replacement_header = any(
+            h in header_str
+            for h in ("recommended upgrade", "recommended replacement", "replacement", "substitute model")
+        )
+        if lifecycle_date_header and replacement_header:
             model_idx = next(
                 (
                     i
@@ -576,6 +595,7 @@ def parse_tables(
                         or h.strip() == "model"
                         or "deprecated model" in h
                         or "legacy model" in h
+                        or "model snapshot" in h
                     )
                 ),
                 0,
@@ -589,7 +609,7 @@ def parse_tables(
                 None,
             )
             repl_idx = next(
-                (i for i, h in enumerate(header) if "recommended upgrade" in h or "replacement" in h),
+                (i for i, h in enumerate(header) if "recommended upgrade" in h or "replacement" in h or "substitute" in h),
                 None,
             )
             for row in table[1:]:
@@ -605,6 +625,8 @@ def parse_tables(
                     " or ".join(extract_model_ids(replacement, provider)) if extract_model_ids(replacement, provider) else None
                 )
                 for model_id in model_ids:
+                    if retirement and not sunset:
+                        parse_warnings.append(f"{provider}:{model_id} lifecycle table date not parsed: {retirement!r} ({url})")
                     status = choose_status("deprecated retirement", sunset)
                     merge_candidate(
                         store=out,
