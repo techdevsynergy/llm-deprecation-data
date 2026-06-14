@@ -621,6 +621,9 @@ def parse_tables(
                     k in row_text for k in ["deprecated", "deprecation", "retired", "legacy", "sunset", "discontinued"]
                 ):
                     continue
+                if not sunset:
+                    for model_id in model_ids:
+                        parse_warnings.append(f"{provider}:{model_id} lifecycle table missing retirement/shutdown date ({url})")
                 for model_id in model_ids:
                     status = choose_status("deprecated retirement", sunset)
                     merge_candidate(
