@@ -562,9 +562,21 @@ def parse_tables(
 
         # OpenAI or Gemini style lifecycle table:
         # Model ID | Release date | Retirement date | Recommended upgrade
+        # Model | Release date | Shutdown date | Recommended replacement
+        # Model ID | Release date | Retirement date
         if (
             ("recommended upgrade" in header_str and "retirement date" in header_str)
             or ("shutdown date" in header_str and "recommended replacement" in header_str)
+            or (
+                provider == "gemini"
+                and ("model id" in header_str or re.search(r"\bmodel\b", header_str))
+                and (
+                    "retirement date" in header_str
+                    or "discontinuation date" in header_str
+                    or "shutdown date" in header_str
+                    or "sunset" in header_str
+                )
+            )
         ):
             model_idx = next(
                 (
@@ -604,6 +616,11 @@ def parse_tables(
                 replacement_norm = extract_replacement("recommended upgrade " + replacement, provider) or (
                     " or ".join(extract_model_ids(replacement, provider)) if extract_model_ids(replacement, provider) else None
                 )
+                row_text = " ".join(row).lower()
+                if not sunset and not replacement_norm and not any(
+                    k in row_text for k in ["deprecated", "deprecation", "retired", "legacy", "sunset", "discontinued"]
+                ):
+                    continue
                 for model_id in model_ids:
                     status = choose_status("deprecated retirement", sunset)
                     merge_candidate(
