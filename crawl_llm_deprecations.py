@@ -35,26 +35,39 @@ ALLOWED_STATUSES = {"active", "deprecated", "legacy", "retired"}
 STATUS_PRIORITY = {"active": 0, "legacy": 1, "deprecated": 2, "retired": 3}
 
 MONTHS = {
+    "jan": 1,
     "january": 1,
+    "feb": 2,
     "february": 2,
+    "mar": 3,
     "march": 3,
+    "apr": 4,
     "april": 4,
     "may": 5,
+    "jun": 6,
     "june": 6,
+    "jul": 7,
     "july": 7,
+    "aug": 8,
     "august": 8,
+    "sep": 9,
+    "sept": 9,
     "september": 9,
+    "oct": 10,
     "october": 10,
+    "nov": 11,
     "november": 11,
+    "dec": 12,
     "december": 12,
 }
 
 MODEL_REGEX_BY_PROVIDER = {
     "openai": re.compile(
         r"\b(?:gpt|o[0-9]|"
+        r"chatgpt-(?:4o|image)|computer-use|"
         r"text-(?:embedding|moderation|ada|babbage|curie|davinci|similarity|search)|"
         r"code-(?:davinci|cushman|search)|"
-        r"omni-moderation|whisper|dall-e|sora|babbage|davinci|codex)"
+        r"omni-moderation|whisper|dall-e|sora|tts|babbage|davinci|codex)"
         r"[a-z0-9._:@-]*\b",
         re.IGNORECASE,
     ),
@@ -90,7 +103,13 @@ def is_probable_model_id(provider: str, token: str) -> bool:
     if not token or token in {"claude", "gemini", "gpt", "model", "models"}:
         return False
     if provider == "openai":
-        return bool(re.match(r"^(gpt|o[0-9]|text-|code-|omni-|whisper|dall-e|sora|babbage|davinci|codex)", token))
+        return bool(
+            re.match(
+                r"^(gpt|o[0-9]|chatgpt-|computer-use-|text-|code-|omni-|"
+                r"whisper|dall-e|sora|tts-|babbage|davinci|codex)",
+                token,
+            )
+        )
     if provider == "anthropic":
         return bool(re.match(r"^claude-[a-z0-9.-]+$", token))
     if provider == "gemini":
@@ -137,7 +156,18 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
     )
     s = " ".join(s.strip().split())
     sl = s.lower()
-    if any(x in sl for x in ["n/a", "no retirement date announced", "unknown", "tbd"]):
+    if any(
+        x in sl
+        for x in [
+            "n/a",
+            "no retirement date announced",
+            "no sooner than",
+            "not sooner than",
+            "not before",
+            "unknown",
+            "tbd",
+        ]
+    ):
         return None
 
     # YYYY-MM-DD
@@ -149,9 +179,11 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
         except ValueError:
             pass
 
+    month_names = sorted(MONTHS.keys(), key=len, reverse=True)
+
     # Month DD, YYYY  OR Month DD YYYY
     m = re.search(
-        r"\b(" + "|".join(MONTHS.keys()) + r")\s+(\d{1,2})(?:,)?\s+(20\d{2})\b",
+        r"\b(" + "|".join(month_names) + r")\.?\s+(\d{1,2})(?:st|nd|rd|th)?(?:,)?\s+(20\d{2})\b",
         sl,
     )
     if m:
@@ -165,7 +197,7 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
 
     # DD Month YYYY
     m = re.search(
-        r"\b(\d{1,2})\s+(" + "|".join(MONTHS.keys()) + r")(?:,)?\s+(20\d{2})\b",
+        r"\b(\d{1,2})(?:st|nd|rd|th)?\s+(" + "|".join(month_names) + r")\.?(?:,)?\s+(20\d{2})\b",
         sl,
     )
     if m:
@@ -619,6 +651,45 @@ def parse_tables(
                     )
             continue
 
+        # Gemini model-version tables also list active models without a
+        # replacement column:
+        # Model ID | Release date | Retirement date
+        if provider == "gemini" and "model id" in header_str and (
+            "retirement date" in header_str or "discontinuation date" in header_str
+        ):
+            model_idx = next((i for i, h in enumerate(header) if "model id" in h or h.strip() == "model"), 0)
+            retirement_idx = next(
+                (i for i, h in enumerate(header) if "retirement date" in h or "discontinuation date" in h),
+                None,
+            )
+            repl_idx = next((i for i, h in enumerate(header) if "recommended upgrade" in h or "replacement" in h), None)
+            for row in table[1:]:
+                if model_idx >= len(row):
+                    continue
+                model_ids = extract_model_ids(row[model_idx], provider)
+                if not model_ids:
+                    continue
+                retirement = row[retirement_idx] if retirement_idx is not None and retirement_idx < len(row) else ""
+                sunset = parse_date_yyyy_mm_dd(retirement)
+                replacement = row[repl_idx] if repl_idx is not None and repl_idx < len(row) else ""
+                replacement_norm = extract_replacement("recommended upgrade " + replacement, provider) or (
+                    " or ".join(extract_model_ids(replacement, provider)) if extract_model_ids(replacement, provider) else None
+                )
+                for model_id in model_ids:
+                    status = choose_status("retirement", sunset) if sunset else "active"
+                    merge_candidate(
+                        store=out,
+                        provider=provider,
+                        model_id=model_id,
+                        status=status,
+                        deprecated_date=None,
+                        sunset_date=sunset,
+                        replacement=replacement_norm,
+                        notes=f"Crawled from {url}: model version table.",
+                        source_url=url,
+                    )
+            continue
+
         # Gemini key-value model details table:
         # row0: Model ID | <actual-id>
         if len(table) > 2 and len(table[0]) >= 2 and table[0][0].strip().lower() == "model id":
@@ -687,6 +758,32 @@ def parse_tables(
             notes=f"Crawled from {url}: explicit lifecycle text sentence.",
             source_url=url,
         )
+
+    if provider == "gemini":
+        availability = re.compile(
+            r"(?P<model>[a-z0-9][a-z0-9._:@-]{2,})\s+"
+            r"Launch stage:.{0,500}?Discontinuation date:\s*"
+            r"(?P<date>[^\n]+)",
+            re.IGNORECASE | re.DOTALL,
+        )
+        for match in availability.finditer(text_blob):
+            model_id = normalize_model_id(match.group("model"))
+            if not is_probable_model_id(provider, model_id):
+                continue
+            date_text = match.group("date")
+            sunset = parse_date_yyyy_mm_dd(date_text)
+            status = choose_status("discontinuation", sunset) if sunset else "active"
+            merge_candidate(
+                store=out,
+                provider=provider,
+                model_id=model_id,
+                status=status,
+                deprecated_date=None,
+                sunset_date=sunset,
+                replacement=None,
+                notes=f"Crawled from {url}: model availability block.",
+                source_url=url,
+            )
 
 
 def crawl_sources(sources: Dict[str, List[str]]) -> Tuple[Dict[Tuple[str, str], Dict[str, object]], List[Dict[str, object]], List[str]]:
