@@ -35,26 +35,39 @@ ALLOWED_STATUSES = {"active", "deprecated", "legacy", "retired"}
 STATUS_PRIORITY = {"active": 0, "legacy": 1, "deprecated": 2, "retired": 3}
 
 MONTHS = {
+    "jan": 1,
     "january": 1,
+    "feb": 2,
     "february": 2,
+    "mar": 3,
     "march": 3,
+    "apr": 4,
     "april": 4,
     "may": 5,
+    "jun": 6,
     "june": 6,
+    "jul": 7,
     "july": 7,
+    "aug": 8,
     "august": 8,
+    "sep": 9,
+    "sept": 9,
     "september": 9,
+    "oct": 10,
     "october": 10,
+    "nov": 11,
     "november": 11,
+    "dec": 12,
     "december": 12,
 }
 
 MODEL_REGEX_BY_PROVIDER = {
     "openai": re.compile(
         r"\b(?:gpt|o[0-9]|"
+        r"chatgpt-(?:4o|image)|computer-use|"
         r"text-(?:embedding|moderation|ada|babbage|curie|davinci|similarity|search)|"
         r"code-(?:davinci|cushman|search)|"
-        r"omni-moderation|whisper|dall-e|sora|babbage|davinci|codex)"
+        r"omni-moderation|whisper|dall-e|sora|tts|babbage|davinci|codex)"
         r"[a-z0-9._:@-]*\b",
         re.IGNORECASE,
     ),
@@ -90,7 +103,13 @@ def is_probable_model_id(provider: str, token: str) -> bool:
     if not token or token in {"claude", "gemini", "gpt", "model", "models"}:
         return False
     if provider == "openai":
-        return bool(re.match(r"^(gpt|o[0-9]|text-|code-|omni-|whisper|dall-e|sora|babbage|davinci|codex)", token))
+        return bool(
+            re.match(
+                r"^(gpt|o[0-9]|chatgpt-|computer-use-|text-|code-|omni-|"
+                r"whisper|dall-e|sora|tts-|babbage|davinci|codex)",
+                token,
+            )
+        )
     if provider == "anthropic":
         return bool(re.match(r"^claude-[a-z0-9.-]+$", token))
     if provider == "gemini":
@@ -149,9 +168,11 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
         except ValueError:
             pass
 
+    month_names = sorted(MONTHS.keys(), key=len, reverse=True)
+
     # Month DD, YYYY  OR Month DD YYYY
     m = re.search(
-        r"\b(" + "|".join(MONTHS.keys()) + r")\s+(\d{1,2})(?:,)?\s+(20\d{2})\b",
+        r"\b(" + "|".join(month_names) + r")\.?\s+(\d{1,2})(?:st|nd|rd|th)?(?:,)?\s+(20\d{2})\b",
         sl,
     )
     if m:
@@ -165,7 +186,7 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
 
     # DD Month YYYY
     m = re.search(
-        r"\b(\d{1,2})\s+(" + "|".join(MONTHS.keys()) + r")(?:,)?\s+(20\d{2})\b",
+        r"\b(\d{1,2})(?:st|nd|rd|th)?\s+(" + "|".join(month_names) + r")\.?(?:,)?\s+(20\d{2})\b",
         sl,
     )
     if m:
