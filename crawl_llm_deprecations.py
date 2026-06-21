@@ -156,7 +156,18 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
     )
     s = " ".join(s.strip().split())
     sl = s.lower()
-    if any(x in sl for x in ["n/a", "no retirement date announced", "unknown", "tbd"]):
+    if any(
+        x in sl
+        for x in [
+            "n/a",
+            "no retirement date announced",
+            "no sooner than",
+            "not sooner than",
+            "not before",
+            "unknown",
+            "tbd",
+        ]
+    ):
         return None
 
     # YYYY-MM-DD
@@ -640,6 +651,45 @@ def parse_tables(
                     )
             continue
 
+        # Gemini model-version tables also list active models without a
+        # replacement column:
+        # Model ID | Release date | Retirement date
+        if provider == "gemini" and "model id" in header_str and (
+            "retirement date" in header_str or "discontinuation date" in header_str
+        ):
+            model_idx = next((i for i, h in enumerate(header) if "model id" in h or h.strip() == "model"), 0)
+            retirement_idx = next(
+                (i for i, h in enumerate(header) if "retirement date" in h or "discontinuation date" in h),
+                None,
+            )
+            repl_idx = next((i for i, h in enumerate(header) if "recommended upgrade" in h or "replacement" in h), None)
+            for row in table[1:]:
+                if model_idx >= len(row):
+                    continue
+                model_ids = extract_model_ids(row[model_idx], provider)
+                if not model_ids:
+                    continue
+                retirement = row[retirement_idx] if retirement_idx is not None and retirement_idx < len(row) else ""
+                sunset = parse_date_yyyy_mm_dd(retirement)
+                replacement = row[repl_idx] if repl_idx is not None and repl_idx < len(row) else ""
+                replacement_norm = extract_replacement("recommended upgrade " + replacement, provider) or (
+                    " or ".join(extract_model_ids(replacement, provider)) if extract_model_ids(replacement, provider) else None
+                )
+                for model_id in model_ids:
+                    status = choose_status("retirement", sunset) if sunset else "active"
+                    merge_candidate(
+                        store=out,
+                        provider=provider,
+                        model_id=model_id,
+                        status=status,
+                        deprecated_date=None,
+                        sunset_date=sunset,
+                        replacement=replacement_norm,
+                        notes=f"Crawled from {url}: model version table.",
+                        source_url=url,
+                    )
+            continue
+
         # Gemini key-value model details table:
         # row0: Model ID | <actual-id>
         if len(table) > 2 and len(table[0]) >= 2 and table[0][0].strip().lower() == "model id":
@@ -708,6 +758,32 @@ def parse_tables(
             notes=f"Crawled from {url}: explicit lifecycle text sentence.",
             source_url=url,
         )
+
+    if provider == "gemini":
+        availability = re.compile(
+            r"(?P<model>[a-z0-9][a-z0-9._:@-]{2,})\s+"
+            r"Launch stage:.{0,500}?Discontinuation date:\s*"
+            r"(?P<date>[^\n]+)",
+            re.IGNORECASE | re.DOTALL,
+        )
+        for match in availability.finditer(text_blob):
+            model_id = normalize_model_id(match.group("model"))
+            if not is_probable_model_id(provider, model_id):
+                continue
+            date_text = match.group("date")
+            sunset = parse_date_yyyy_mm_dd(date_text)
+            status = choose_status("discontinuation", sunset) if sunset else "active"
+            merge_candidate(
+                store=out,
+                provider=provider,
+                model_id=model_id,
+                status=status,
+                deprecated_date=None,
+                sunset_date=sunset,
+                replacement=None,
+                notes=f"Crawled from {url}: model availability block.",
+                source_url=url,
+            )
 
 
 def crawl_sources(sources: Dict[str, List[str]]) -> Tuple[Dict[Tuple[str, str], Dict[str, object]], List[Dict[str, object]], List[str]]:
