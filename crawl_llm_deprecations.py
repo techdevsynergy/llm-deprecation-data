@@ -137,7 +137,19 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
     )
     s = " ".join(s.strip().split())
     sl = s.lower()
-    if any(x in sl for x in ["n/a", "no retirement date announced", "unknown", "tbd"]):
+    if any(
+        x in sl
+        for x in [
+            "n/a",
+            "no retirement date announced",
+            "not before",
+            "not sooner than",
+            "no sooner than",
+            "not earlier than",
+            "unknown",
+            "tbd",
+        ]
+    ):
         return None
 
     # YYYY-MM-DD
@@ -560,6 +572,57 @@ def parse_tables(
                     )
             continue
 
+        # Gemini image endpoint lifecycle table:
+        # Discontinued endpoints | Recommended endpoint migration
+        if "discontinued endpoints" in header_str and "recommended endpoint migration" in header_str:
+            model_idx = next((i for i, h in enumerate(header) if "discontinued endpoints" in h), 0)
+            repl_idx = next((i for i, h in enumerate(header) if "recommended endpoint migration" in h), None)
+            table_sunset = None
+            for candidate_row in table[1:]:
+                if model_idx >= len(candidate_row):
+                    continue
+                candidate_ids = extract_model_ids(candidate_row[model_idx], provider)
+                if not candidate_ids:
+                    continue
+                marker_idx = text_blob.lower().find(candidate_ids[0].lower())
+                date_context = text_blob[max(0, marker_idx - 600): marker_idx + 250] if marker_idx >= 0 else text_blob
+                deadline = re.search(
+                    r"\b(?:before|by)\s+"
+                    r"(?P<date>(?:[A-Za-z]+\s+\d{1,2},?\s+20\d{2}|"
+                    r"20\d{2}-\d{1,2}-\d{1,2}|"
+                    r"\d{1,2}\s+[A-Za-z]+,?\s+20\d{2}))",
+                    date_context,
+                    re.IGNORECASE,
+                )
+                table_sunset = parse_date_yyyy_mm_dd(deadline.group("date") if deadline else date_context)
+                break
+            if not table_sunset:
+                parse_warnings.append(f"{provider}:{url} discontinued endpoints table missing date")
+            for row in table[1:]:
+                if model_idx >= len(row):
+                    continue
+                model_ids = extract_model_ids(row[model_idx], provider)
+                if not model_ids:
+                    continue
+                replacement = row[repl_idx] if repl_idx is not None and repl_idx < len(row) else ""
+                replacement_norm = (
+                    " or ".join(extract_model_ids(replacement, provider)) if extract_model_ids(replacement, provider) else None
+                )
+                for model_id in model_ids:
+                    status = "retired" if table_sunset and table_sunset < date.today().strftime("%Y-%m-%d") else "deprecated"
+                    merge_candidate(
+                        store=out,
+                        provider=provider,
+                        model_id=model_id,
+                        status=status,
+                        deprecated_date=None,
+                        sunset_date=table_sunset,
+                        replacement=replacement_norm,
+                        notes=f"Crawled from {url}: endpoint lifecycle table.",
+                        source_url=url,
+                    )
+            continue
+
         # OpenAI or Gemini style lifecycle table:
         # Model ID | Release date | Retirement date | Recommended upgrade
         if (
@@ -630,6 +693,10 @@ def parse_tables(
                 if len(row) >= 2:
                     details[row[0].strip().lower()] = row[1]
             date_val = details.get("discontinuation date") or details.get("retirement date")
+            if not date_val and "versions" in details:
+                m = re.search(r"discontinuation date:\s*(?P<value>.+)$", details["versions"], re.IGNORECASE)
+                if m:
+                    date_val = m.group("value")
             sunset = parse_date_yyyy_mm_dd(date_val or "")
             if sunset:
                 status = "retired" if sunset < date.today().strftime("%Y-%m-%d") else "deprecated"
