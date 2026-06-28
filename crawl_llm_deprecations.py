@@ -577,10 +577,18 @@ def parse_tables(
         if "discontinued endpoints" in header_str and "recommended endpoint migration" in header_str:
             model_idx = next((i for i, h in enumerate(header) if "discontinued endpoints" in h), 0)
             repl_idx = next((i for i, h in enumerate(header) if "recommended endpoint migration" in h), None)
-            marker_idx = text_blob.lower().find("discontinued endpoints")
-            date_context = text_blob[max(0, marker_idx - 500): marker_idx + 500] if marker_idx >= 0 else text_blob
-            sunset = parse_date_yyyy_mm_dd(date_context)
-            if not sunset:
+            table_sunset = None
+            for candidate_row in table[1:]:
+                if model_idx >= len(candidate_row):
+                    continue
+                candidate_ids = extract_model_ids(candidate_row[model_idx], provider)
+                if not candidate_ids:
+                    continue
+                marker_idx = text_blob.lower().find(candidate_ids[0].lower())
+                date_context = text_blob[max(0, marker_idx - 600): marker_idx + 250] if marker_idx >= 0 else text_blob
+                table_sunset = parse_date_yyyy_mm_dd(date_context)
+                break
+            if not table_sunset:
                 parse_warnings.append(f"{provider}:{url} discontinued endpoints table missing date")
             for row in table[1:]:
                 if model_idx >= len(row):
@@ -593,14 +601,14 @@ def parse_tables(
                     " or ".join(extract_model_ids(replacement, provider)) if extract_model_ids(replacement, provider) else None
                 )
                 for model_id in model_ids:
-                    status = "retired" if sunset and sunset < date.today().strftime("%Y-%m-%d") else "deprecated"
+                    status = "retired" if table_sunset and table_sunset < date.today().strftime("%Y-%m-%d") else "deprecated"
                     merge_candidate(
                         store=out,
                         provider=provider,
                         model_id=model_id,
                         status=status,
                         deprecated_date=None,
-                        sunset_date=sunset,
+                        sunset_date=table_sunset,
                         replacement=replacement_norm,
                         notes=f"Crawled from {url}: endpoint lifecycle table.",
                         source_url=url,
