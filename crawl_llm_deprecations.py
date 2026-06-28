@@ -586,7 +586,15 @@ def parse_tables(
                     continue
                 marker_idx = text_blob.lower().find(candidate_ids[0].lower())
                 date_context = text_blob[max(0, marker_idx - 600): marker_idx + 250] if marker_idx >= 0 else text_blob
-                table_sunset = parse_date_yyyy_mm_dd(date_context)
+                deadline = re.search(
+                    r"\b(?:before|by)\s+"
+                    r"(?P<date>(?:[A-Za-z]+\s+\d{1,2},?\s+20\d{2}|"
+                    r"20\d{2}-\d{1,2}-\d{1,2}|"
+                    r"\d{1,2}\s+[A-Za-z]+,?\s+20\d{2}))",
+                    date_context,
+                    re.IGNORECASE,
+                )
+                table_sunset = parse_date_yyyy_mm_dd(deadline.group("date") if deadline else date_context)
                 break
             if not table_sunset:
                 parse_warnings.append(f"{provider}:{url} discontinued endpoints table missing date")
