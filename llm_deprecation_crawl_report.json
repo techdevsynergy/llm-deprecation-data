@@ -1,5 +1,5 @@
 {
-  "run_timestamp_utc": "2026-06-07T14:03:27Z",
+  "run_timestamp_utc": "2026-07-05T14:04:13Z",
   "user_agent": "LLMDeprecationCrawler/1.0 (compliance)",
   "sources": {
     "openai": [
@@ -18,10 +18,15 @@
       "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/release-notes",
       "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/google-models",
       "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/live-api",
-      "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro",
+      "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-5-flash",
       "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-flash",
       "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-pro",
       "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite",
+      "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite-image",
+      "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-image",
+      "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-image-preview",
+      "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro-image",
+      "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro-image-preview",
       "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-pro",
       "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash",
       "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash-lite",
@@ -41,7 +46,7 @@
       "fetched_via": "direct",
       "error": null,
       "robots_error": null,
-      "records_extracted": 73
+      "records_extracted": 79
     },
     {
       "provider": "openai",
@@ -155,8 +160,8 @@
     },
     {
       "provider": "gemini",
-      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro",
-      "final_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro",
+      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-5-flash",
+      "final_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-5-flash",
       "http_status": 200,
       "fallback_url": null,
       "fetched_via": "direct",
@@ -190,6 +195,61 @@
       "provider": "gemini",
       "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite",
       "final_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite",
+      "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
+      "error": null,
+      "robots_error": null,
+      "records_extracted": 0
+    },
+    {
+      "provider": "gemini",
+      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite-image",
+      "final_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite-image",
+      "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
+      "error": null,
+      "robots_error": null,
+      "records_extracted": 0
+    },
+    {
+      "provider": "gemini",
+      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-image",
+      "final_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-image",
+      "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
+      "error": null,
+      "robots_error": null,
+      "records_extracted": 0
+    },
+    {
+      "provider": "gemini",
+      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-image-preview",
+      "final_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-image-preview",
+      "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
+      "error": null,
+      "robots_error": null,
+      "records_extracted": 0
+    },
+    {
+      "provider": "gemini",
+      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro-image",
+      "final_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro-image",
+      "http_status": 200,
+      "fallback_url": null,
+      "fetched_via": "direct",
+      "error": null,
+      "robots_error": null,
+      "records_extracted": 0
+    },
+    {
+      "provider": "gemini",
+      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro-image-preview",
+      "final_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro-image-preview",
       "http_status": 200,
       "fallback_url": null,
       "fetched_via": "direct",
@@ -275,7 +335,7 @@
       "records_extracted": 0
     }
   ],
-  "crawl_record_count": 119,
+  "crawl_record_count": 125,
   "crawl_records": [
     {
       "provider": "anthropic",
@@ -442,7 +502,7 @@
     {
       "provider": "anthropic",
       "model_id": "claude-opus-4-20250514",
-      "status": "deprecated",
+      "status": "retired",
       "deprecated_date": "2026-04-14",
       "sunset_date": "2026-06-15",
       "replacement": "claude-opus-4-8",
@@ -487,7 +547,7 @@
     {
       "provider": "anthropic",
       "model_id": "claude-sonnet-4-20250514",
-      "status": "deprecated",
+      "status": "retired",
       "deprecated_date": "2026-04-14",
       "sunset_date": "2026-06-15",
       "replacement": "claude-sonnet-4-6",
@@ -1053,6 +1113,42 @@
     },
     {
       "provider": "openai",
+      "model_id": "gpt-5-2025-08-07",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": null,
+      "replacement": "gpt-5.5",
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-5-mini-2025-08-07",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": null,
+      "replacement": "gpt-5.4-mini",
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-5-nano-2025-08-07",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": null,
+      "replacement": "gpt-5.4-nano",
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-5-pro-2025-10-06",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": null,
+      "replacement": "gpt-5.5-pro",
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
       "model_id": "gpt-5.2-chat-latest",
       "status": "deprecated",
       "deprecated_date": null,
@@ -1103,6 +1199,24 @@
       "deprecated_date": null,
       "sunset_date": "2025-07-28",
       "replacement": "o3",
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "o3-2025-04-16",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": null,
+      "replacement": "gpt-5.5",
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "o3-pro-2025-06-10",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": null,
+      "replacement": "gpt-5.5-pro",
       "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
@@ -1352,13 +1466,13 @@
   "provider_summary": {
     "openai": {
       "updated": 0,
-      "added": 0,
+      "added": 6,
       "unchanged": 106
     },
     "anthropic": {
-      "updated": 0,
+      "updated": 2,
       "added": 0,
-      "unchanged": 32
+      "unchanged": 30
     },
     "gemini": {
       "updated": 0,

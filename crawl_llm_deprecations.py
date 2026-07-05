@@ -137,7 +137,18 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
     )
     s = " ".join(s.strip().split())
     sl = s.lower()
-    if any(x in sl for x in ["n/a", "no retirement date announced", "unknown", "tbd"]):
+    if any(
+        x in sl
+        for x in [
+            "n/a",
+            "no retirement date announced",
+            "not before",
+            "not sooner than",
+            "no sooner than",
+            "unknown",
+            "tbd",
+        ]
+    ):
         return None
 
     # YYYY-MM-DD
