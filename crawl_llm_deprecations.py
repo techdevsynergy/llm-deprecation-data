@@ -716,6 +716,10 @@ def parse_tables(
             continue
         sentence = text_blob[match.start(): min(len(text_blob), match.end() + 240)]
         replacement = extract_replacement(sentence, provider)
+        if not replacement:
+            replacement_ids = [mid for mid in extract_model_ids(sentence, provider) if mid != model_id]
+            if replacement_ids:
+                replacement = replacement_ids[0]
         status = "retired" if sunset < date.today().strftime("%Y-%m-%d") else "deprecated"
         merge_candidate(
             store=out,
