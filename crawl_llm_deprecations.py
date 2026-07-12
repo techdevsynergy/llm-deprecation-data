@@ -36,22 +36,35 @@ STATUS_PRIORITY = {"active": 0, "legacy": 1, "deprecated": 2, "retired": 3}
 
 MONTHS = {
     "january": 1,
+    "jan": 1,
     "february": 2,
+    "feb": 2,
     "march": 3,
+    "mar": 3,
     "april": 4,
+    "apr": 4,
     "may": 5,
     "june": 6,
+    "jun": 6,
     "july": 7,
+    "jul": 7,
     "august": 8,
+    "aug": 8,
     "september": 9,
+    "sep": 9,
+    "sept": 9,
     "october": 10,
+    "oct": 10,
     "november": 11,
+    "nov": 11,
     "december": 12,
+    "dec": 12,
 }
 
 MODEL_REGEX_BY_PROVIDER = {
     "openai": re.compile(
         r"\b(?:gpt|o[0-9]|"
+        r"ft-[a-z0-9._:@-]+|computer-use-preview|"
         r"text-(?:embedding|moderation|ada|babbage|curie|davinci|similarity|search)|"
         r"code-(?:davinci|cushman|search)|"
         r"omni-moderation|whisper|dall-e|sora|babbage|davinci|codex)"
@@ -90,7 +103,13 @@ def is_probable_model_id(provider: str, token: str) -> bool:
     if not token or token in {"claude", "gemini", "gpt", "model", "models"}:
         return False
     if provider == "openai":
-        return bool(re.match(r"^(gpt|o[0-9]|text-|code-|omni-|whisper|dall-e|sora|babbage|davinci|codex)", token))
+        return bool(
+            re.match(
+                r"^(gpt|o[0-9]|ft-|computer-use-preview|text-|code-|omni-|whisper|"
+                r"dall-e|sora|babbage|davinci|codex)",
+                token,
+            )
+        )
     if provider == "anthropic":
         return bool(re.match(r"^claude-[a-z0-9.-]+$", token))
     if provider == "gemini":
@@ -162,7 +181,7 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
 
     # Month DD, YYYY  OR Month DD YYYY
     m = re.search(
-        r"\b(" + "|".join(MONTHS.keys()) + r")\s+(\d{1,2})(?:,)?\s+(20\d{2})\b",
+        r"\b(" + "|".join(MONTHS.keys()) + r")\.?\s+(\d{1,2})(?:st|nd|rd|th)?(?:,)?\s+(20\d{2})\b",
         sl,
     )
     if m:
@@ -176,7 +195,7 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
 
     # DD Month YYYY
     m = re.search(
-        r"\b(\d{1,2})\s+(" + "|".join(MONTHS.keys()) + r")(?:,)?\s+(20\d{2})\b",
+        r"\b(\d{1,2})(?:st|nd|rd|th)?\s+(" + "|".join(MONTHS.keys()) + r")\.?(?:,)?\s+(20\d{2})\b",
         sl,
     )
     if m:
@@ -575,7 +594,14 @@ def parse_tables(
         # Model ID | Release date | Retirement date | Recommended upgrade
         if (
             ("recommended upgrade" in header_str and "retirement date" in header_str)
-            or ("shutdown date" in header_str and "recommended replacement" in header_str)
+            or (
+                "shutdown date" in header_str
+                and (
+                    "recommended replacement" in header_str
+                    or "recommended replacement base model" in header_str
+                    or "substitute model" in header_str
+                )
+            )
         ):
             model_idx = next(
                 (
@@ -600,7 +626,11 @@ def parse_tables(
                 None,
             )
             repl_idx = next(
-                (i for i, h in enumerate(header) if "recommended upgrade" in h or "replacement" in h),
+                (
+                    i
+                    for i, h in enumerate(header)
+                    if "recommended upgrade" in h or "replacement" in h or "substitute model" in h
+                ),
                 None,
             )
             for row in table[1:]:
@@ -669,7 +699,7 @@ def parse_tables(
     # Example:
     # "gemini-live-... will be deprecated and removed on March 19, 2026."
     explicit = re.compile(
-        r"(?P<model>[a-z0-9][a-z0-9._:@-]{2,})\s+"
+        r"(?P<model>[a-z0-9][a-z0-9._:@-]{2,})(?:[`'\"()\\[\\],\s]){0,12}"
         r"(?:will be|is|was)\s+"
         r"(?:deprecated(?:\s+and\s+removed)?|retired|removed|discontinued)"
         r"[^.]{0,180}?\s(?:on|by)\s"
