@@ -699,7 +699,7 @@ def parse_tables(
     # Example:
     # "gemini-live-... will be deprecated and removed on March 19, 2026."
     explicit = re.compile(
-        r"(?P<model>[a-z0-9][a-z0-9._:@-]{2,})(?:[`'\"()\\[\\],\s]){0,12}"
+        r"(?P<model>[a-z0-9][a-z0-9._:@-]{2,})(?:[\s`'\"()\[\],]){0,12}"
         r"(?:will be|is|was)\s+"
         r"(?:deprecated(?:\s+and\s+removed)?|retired|removed|discontinued)"
         r"[^.]{0,180}?\s(?:on|by)\s"
