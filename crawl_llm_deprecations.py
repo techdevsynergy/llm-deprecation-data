@@ -526,6 +526,12 @@ def merge_candidate(
         existing["deprecated_date"] = later_date(existing["deprecated_date"], deprecated_date)
     if sunset_date:
         existing["sunset_date"] = later_date(existing["sunset_date"], sunset_date)
+    if existing["sunset_date"] and existing["status"] in {"deprecated", "retired"}:
+        existing["status"] = (
+            "retired"
+            if existing["sunset_date"] < date.today().strftime("%Y-%m-%d")
+            else "deprecated"
+        )
     if replacement and not existing["replacement"]:
         existing["replacement"] = replacement
     if notes and ("crawl" in str(existing["notes"]).lower() or not existing["notes"]):
@@ -912,7 +918,7 @@ def merge_with_existing(
                     changed = True
             for field in ("deprecated_date", "sunset_date", "replacement"):
                 new_val = crawl_row.get(field)
-                if new_val is not None and row.get(field) != new_val:
+                if row.get(field) != new_val:
                     row[field] = new_val
                     changed = True
             crawl_note = str(crawl_row.get("notes") or "").strip()
