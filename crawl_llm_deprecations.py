@@ -656,12 +656,24 @@ def parse_tables(
                             replacement_ids.append(
                                 marketing_name.group(1).lower()
                                 + "-"
-                                + re.sub(r"[\s.]+", "-", marketing_name.group(2).strip().lower())
+                                + re.sub(r"\s+", "-", marketing_name.group(2).strip().lower())
                             )
                     if replacement_ids:
                         replacement_norm = " or ".join(replacement_ids)
                 for model_id in model_ids:
-                    status = choose_status("deprecated retirement", sunset)
+                    if provider == "gemini" and not sunset and any(
+                        qualifier in retirement.lower()
+                        for qualifier in [
+                            "not before",
+                            "not sooner than",
+                            "no sooner than",
+                            "or later",
+                            "no retirement date announced",
+                        ]
+                    ):
+                        status = "active"
+                    else:
+                        status = choose_status("deprecated retirement", sunset)
                     merge_candidate(
                         store=out,
                         provider=provider,
