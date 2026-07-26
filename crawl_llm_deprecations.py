@@ -36,22 +36,35 @@ STATUS_PRIORITY = {"active": 0, "legacy": 1, "deprecated": 2, "retired": 3}
 
 MONTHS = {
     "january": 1,
+    "jan": 1,
     "february": 2,
+    "feb": 2,
     "march": 3,
+    "mar": 3,
     "april": 4,
+    "apr": 4,
     "may": 5,
     "june": 6,
+    "jun": 6,
     "july": 7,
+    "jul": 7,
     "august": 8,
+    "aug": 8,
     "september": 9,
+    "sept": 9,
+    "sep": 9,
     "october": 10,
+    "oct": 10,
     "november": 11,
+    "nov": 11,
     "december": 12,
+    "dec": 12,
 }
 
 MODEL_REGEX_BY_PROVIDER = {
     "openai": re.compile(
         r"\b(?:gpt|o[0-9]|"
+        r"computer-use|tts|"
         r"text-(?:embedding|moderation|ada|babbage|curie|davinci|similarity|search)|"
         r"code-(?:davinci|cushman|search)|"
         r"omni-moderation|whisper|dall-e|sora|babbage|davinci|codex)"
@@ -61,8 +74,8 @@ MODEL_REGEX_BY_PROVIDER = {
     "anthropic": re.compile(r"\bclaude-[a-z0-9.-]+\b", re.IGNORECASE),
     "gemini": re.compile(
         r"\b(?:gemini|veo|nano-banana|imagen|imagetext|virtual-try-on|"
-        r"textembedding-gecko|imagegeneration|text-bison|chat-bison|code-gecko|"
-        r"gemini-embedding|text-embedding)"
+        r"textembedding-gecko|multimodalembedding|imagegeneration|text-bison|chat-bison|code-gecko|"
+        r"gemini-embedding|text-embedding|text-multilingual-embedding)"
         r"[a-z0-9._:@-]*\*?\b",
         re.IGNORECASE,
     ),
@@ -90,15 +103,21 @@ def is_probable_model_id(provider: str, token: str) -> bool:
     if not token or token in {"claude", "gemini", "gpt", "model", "models"}:
         return False
     if provider == "openai":
-        return bool(re.match(r"^(gpt|o[0-9]|text-|code-|omni-|whisper|dall-e|sora|babbage|davinci|codex)", token))
+        return bool(
+            re.match(
+                r"^(gpt|o[0-9]|computer-use|tts|text-|code-|omni-|whisper|"
+                r"dall-e|sora|babbage|davinci|codex)",
+                token,
+            )
+        )
     if provider == "anthropic":
         return bool(re.match(r"^claude-[a-z0-9.-]+$", token))
     if provider == "gemini":
         return bool(
             re.match(
                 r"^(gemini-|veo-|nano-banana|imagen|imagetext|virtual-try-on|"
-                r"textembedding-gecko|imagegeneration|text-bison|chat-bison|"
-                r"code-gecko|gemini-embedding|text-embedding)",
+                r"textembedding-gecko|multimodalembedding|imagegeneration|text-bison|chat-bison|"
+                r"code-gecko|gemini-embedding|text-embedding|text-multilingual-embedding)",
                 token,
             )
         )
@@ -145,6 +164,7 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
             "not before",
             "not sooner than",
             "no sooner than",
+            "or later",
             "unknown",
             "tbd",
         ]
@@ -574,8 +594,11 @@ def parse_tables(
         # OpenAI or Gemini style lifecycle table:
         # Model ID | Release date | Retirement date | Recommended upgrade
         if (
-            ("recommended upgrade" in header_str and "retirement date" in header_str)
-            or ("shutdown date" in header_str and "recommended replacement" in header_str)
+            "retirement date" in header_str
+            and any(label in header_str for label in ["recommended upgrade", "replacement model"])
+        ) or (
+            "shutdown date" in header_str
+            and any(label in header_str for label in ["recommended replacement", "substitute model"])
         ):
             model_idx = next(
                 (
@@ -584,6 +607,8 @@ def parse_tables(
                     if (
                         "model id" in h
                         or "model / system" in h
+                        or "model family" in h
+                        or "model snapshot" in h
                         or h.strip() == "model"
                         or "deprecated model" in h
                         or "legacy model" in h
@@ -600,7 +625,11 @@ def parse_tables(
                 None,
             )
             repl_idx = next(
-                (i for i, h in enumerate(header) if "recommended upgrade" in h or "replacement" in h),
+                (
+                    i
+                    for i, h in enumerate(header)
+                    if "recommended upgrade" in h or "replacement" in h or "substitute model" in h
+                ),
                 None,
             )
             for row in table[1:]:
@@ -615,6 +644,22 @@ def parse_tables(
                 replacement_norm = extract_replacement("recommended upgrade " + replacement, provider) or (
                     " or ".join(extract_model_ids(replacement, provider)) if extract_model_ids(replacement, provider) else None
                 )
+                if provider == "gemini" and replacement and not replacement_norm:
+                    replacement_ids = []
+                    for replacement_part in re.split(r"\s+or\s+", replacement, flags=re.IGNORECASE):
+                        marketing_name = re.match(
+                            r"^\s*(Gemini|Veo|Gemma)\s+([A-Za-z0-9][A-Za-z0-9 .-]*)\s*$",
+                            replacement_part,
+                            re.IGNORECASE,
+                        )
+                        if marketing_name:
+                            replacement_ids.append(
+                                marketing_name.group(1).lower()
+                                + "-"
+                                + re.sub(r"[\s.]+", "-", marketing_name.group(2).strip().lower())
+                            )
+                    if replacement_ids:
+                        replacement_norm = " or ".join(replacement_ids)
                 for model_id in model_ids:
                     status = choose_status("deprecated retirement", sunset)
                     merge_candidate(
