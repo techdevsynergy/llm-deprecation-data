@@ -736,7 +736,7 @@ def parse_tables(
 
     if provider == "anthropic":
         explicit_without_date = re.compile(
-            r"(?P<model>claude-[a-z0-9.-]+)\)?\s+is deprecated"
+            r"(?P<model>claude-[a-z0-9.-]+)\s*\)?\s+is deprecated"
             r".{0,400}?(?:migrate to|use)\s+.*?"
             r"(?P<replacement>claude-[a-z0-9.-]+)",
             re.IGNORECASE | re.DOTALL,
