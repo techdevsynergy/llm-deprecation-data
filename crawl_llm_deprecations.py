@@ -711,8 +711,16 @@ def parse_tables(
             date_val = (
                 details.get("discontinuation date")
                 or details.get("retirement date")
-                or details.get("versions")
             )
+            versions = details.get("versions", "")
+            if not date_val and versions:
+                discontinuation_match = re.search(
+                    r"discontinuation date:\s*(.+)",
+                    versions,
+                    re.IGNORECASE,
+                )
+                if discontinuation_match:
+                    date_val = discontinuation_match.group(1)
             sunset = parse_date_yyyy_mm_dd(date_val or "")
             if sunset:
                 status = "retired" if sunset < date.today().strftime("%Y-%m-%d") else "deprecated"
