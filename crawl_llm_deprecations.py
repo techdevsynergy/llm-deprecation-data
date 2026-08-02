@@ -36,17 +36,29 @@ STATUS_PRIORITY = {"active": 0, "legacy": 1, "deprecated": 2, "retired": 3}
 
 MONTHS = {
     "january": 1,
+    "jan": 1,
     "february": 2,
+    "feb": 2,
     "march": 3,
+    "mar": 3,
     "april": 4,
+    "apr": 4,
     "may": 5,
     "june": 6,
+    "jun": 6,
     "july": 7,
+    "jul": 7,
     "august": 8,
+    "aug": 8,
     "september": 9,
+    "sep": 9,
+    "sept": 9,
     "october": 10,
+    "oct": 10,
     "november": 11,
+    "nov": 11,
     "december": 12,
+    "dec": 12,
 }
 
 MODEL_REGEX_BY_PROVIDER = {
@@ -60,7 +72,7 @@ MODEL_REGEX_BY_PROVIDER = {
     ),
     "anthropic": re.compile(r"\bclaude-[a-z0-9.-]+\b", re.IGNORECASE),
     "gemini": re.compile(
-        r"\b(?:gemini|veo|nano-banana|imagen|imagetext|virtual-try-on|"
+        r"\b(?:gemini|gemma|veo|nano-banana|imagen|imagetext|virtual-try-on|"
         r"textembedding-gecko|imagegeneration|text-bison|chat-bison|code-gecko|"
         r"gemini-embedding|text-embedding|text-multilingual-embedding|multimodalembedding)"
         r"[a-z0-9._:@-]*\*?\b",
@@ -102,7 +114,7 @@ def is_probable_model_id(provider: str, token: str) -> bool:
     if provider == "gemini":
         return bool(
             re.match(
-                r"^(gemini-|veo-|nano-banana|imagen|imagetext|virtual-try-on|"
+                r"^(gemini-|gemma-|veo-|nano-banana|imagen|imagetext|virtual-try-on|"
                 r"textembedding-gecko|imagegeneration|text-bison|chat-bison|"
                 r"code-gecko|gemini-embedding|text-embedding|"
                 r"text-multilingual-embedding|multimodalembedding)",
@@ -170,7 +182,8 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
 
     # Month DD, YYYY  OR Month DD YYYY
     m = re.search(
-        r"\b(" + "|".join(MONTHS.keys()) + r")\s+(\d{1,2})(?:,)?\s+(20\d{2})\b",
+        r"\b(" + "|".join(MONTHS.keys()) + r")\.?\s+"
+        r"(\d{1,2})(?:st|nd|rd|th)?(?:,)?\s+(20\d{2})\b",
         sl,
     )
     if m:
@@ -184,7 +197,9 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
 
     # DD Month YYYY
     m = re.search(
-        r"\b(\d{1,2})\s+(" + "|".join(MONTHS.keys()) + r")(?:,)?\s+(20\d{2})\b",
+        r"\b(\d{1,2})(?:st|nd|rd|th)?\s+("
+        + "|".join(MONTHS.keys())
+        + r")\.?(?:,)?\s+(20\d{2})\b",
         sl,
     )
     if m:
@@ -645,6 +660,24 @@ def parse_tables(
                 replacement_norm = extract_replacement("recommended upgrade " + replacement, provider) or (
                     " or ".join(extract_model_ids(replacement, provider)) if extract_model_ids(replacement, provider) else None
                 )
+                if provider == "gemini" and not replacement_norm:
+                    display_models = re.findall(
+                        r"\b(?:Gemini|Gemma)\s+\d+(?:\.\d+)*"
+                        r"(?:\s+[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)?",
+                        replacement,
+                        re.IGNORECASE,
+                    )
+                    normalized_models = [
+                        re.sub(r"\s+", "-", display_model.strip()).lower()
+                        for display_model in display_models
+                    ]
+                    normalized_models = [
+                        model_id
+                        for model_id in normalized_models
+                        if is_probable_model_id(provider, model_id)
+                    ]
+                    if normalized_models:
+                        replacement_norm = " or ".join(normalized_models)
                 for model_id in model_ids:
                     status = choose_status(
                         "active"
@@ -675,7 +708,11 @@ def parse_tables(
             for row in table[1:]:
                 if len(row) >= 2:
                     details[row[0].strip().lower()] = row[1]
-            date_val = details.get("discontinuation date") or details.get("retirement date")
+            date_val = (
+                details.get("discontinuation date")
+                or details.get("retirement date")
+                or details.get("versions")
+            )
             sunset = parse_date_yyyy_mm_dd(date_val or "")
             if sunset:
                 status = "retired" if sunset < date.today().strftime("%Y-%m-%d") else "deprecated"
