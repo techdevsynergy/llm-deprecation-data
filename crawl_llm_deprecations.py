@@ -51,7 +51,7 @@ MONTHS = {
 
 MODEL_REGEX_BY_PROVIDER = {
     "openai": re.compile(
-        r"\b(?:gpt|o[0-9]|"
+        r"\b(?:ft-(?:gpt|o[0-9])|gpt|chatgpt|computer-use|o[0-9]|tts|"
         r"text-(?:embedding|moderation|ada|babbage|curie|davinci|similarity|search)|"
         r"code-(?:davinci|cushman|search)|"
         r"omni-moderation|whisper|dall-e|sora|babbage|davinci|codex)"
@@ -62,7 +62,7 @@ MODEL_REGEX_BY_PROVIDER = {
     "gemini": re.compile(
         r"\b(?:gemini|veo|nano-banana|imagen|imagetext|virtual-try-on|"
         r"textembedding-gecko|imagegeneration|text-bison|chat-bison|code-gecko|"
-        r"gemini-embedding|text-embedding)"
+        r"gemini-embedding|text-embedding|text-multilingual-embedding|multimodalembedding)"
         r"[a-z0-9._:@-]*\*?\b",
         re.IGNORECASE,
     ),
@@ -90,7 +90,13 @@ def is_probable_model_id(provider: str, token: str) -> bool:
     if not token or token in {"claude", "gemini", "gpt", "model", "models"}:
         return False
     if provider == "openai":
-        return bool(re.match(r"^(gpt|o[0-9]|text-|code-|omni-|whisper|dall-e|sora|babbage|davinci|codex)", token))
+        return bool(
+            re.match(
+                r"^(ft-(?:gpt|o[0-9])|gpt|chatgpt|computer-use|o[0-9]|tts|text-|"
+                r"code-|omni-|whisper|dall-e|sora|babbage|davinci|codex)",
+                token,
+            )
+        )
     if provider == "anthropic":
         return bool(re.match(r"^claude-[a-z0-9.-]+$", token))
     if provider == "gemini":
@@ -98,7 +104,8 @@ def is_probable_model_id(provider: str, token: str) -> bool:
             re.match(
                 r"^(gemini-|veo-|nano-banana|imagen|imagetext|virtual-try-on|"
                 r"textembedding-gecko|imagegeneration|text-bison|chat-bison|"
-                r"code-gecko|gemini-embedding|text-embedding)",
+                r"code-gecko|gemini-embedding|text-embedding|"
+                r"text-multilingual-embedding|multimodalembedding)",
                 token,
             )
         )
@@ -145,6 +152,7 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
             "not before",
             "not sooner than",
             "no sooner than",
+            "or later",
             "unknown",
             "tbd",
         ]
@@ -490,6 +498,16 @@ def merge_candidate(
     if notes and ("crawl" in str(existing["notes"]).lower() or not existing["notes"]):
         existing["notes"] = notes
     existing["_source_urls"].add(source_url)
+    selected_sunset = existing.get("sunset_date")
+    if selected_sunset and (
+        existing.get("status") in {"deprecated", "retired"}
+        or status in {"deprecated", "retired"}
+    ):
+        existing["status"] = (
+            "retired"
+            if str(selected_sunset) < date.today().strftime("%Y-%m-%d")
+            else "deprecated"
+        )
 
 
 def parse_tables(
@@ -571,23 +589,29 @@ def parse_tables(
                     )
             continue
 
-        # OpenAI or Gemini style lifecycle table:
-        # Model ID | Release date | Retirement date | Recommended upgrade
-        if (
-            ("recommended upgrade" in header_str and "retirement date" in header_str)
-            or ("shutdown date" in header_str and "recommended replacement" in header_str)
-        ):
+        # OpenAI or Gemini lifecycle tables use several equivalent headers:
+        # Model ID | Retirement date | Replacement model
+        # Shutdown date | Model snapshot | Substitute model
+        has_lifecycle_date = any(
+            marker in header_str
+            for marker in ("retirement date", "discontinuation date", "shutdown date", "sunset")
+        )
+        has_replacement = any(
+            marker in header_str
+            for marker in ("recommended upgrade", "replacement", "substitute model")
+        )
+        if has_lifecycle_date and has_replacement:
             model_idx = next(
                 (
                     i
                     for i, h in enumerate(header)
-                    if (
-                        "model id" in h
-                        or "model / system" in h
-                        or h.strip() == "model"
-                        or "deprecated model" in h
-                        or "legacy model" in h
-                    )
+                    if "model id" in h
+                    or "model / system" in h
+                    or "model family" in h
+                    or "model snapshot" in h
+                    or h.strip() == "model"
+                    or "deprecated model" in h
+                    or "legacy model" in h
                 ),
                 0,
             )
@@ -600,7 +624,13 @@ def parse_tables(
                 None,
             )
             repl_idx = next(
-                (i for i, h in enumerate(header) if "recommended upgrade" in h or "replacement" in h),
+                (
+                    i
+                    for i, h in enumerate(header)
+                    if "recommended upgrade" in h
+                    or "replacement" in h
+                    or "substitute model" in h
+                ),
                 None,
             )
             for row in table[1:]:
@@ -616,7 +646,12 @@ def parse_tables(
                     " or ".join(extract_model_ids(replacement, provider)) if extract_model_ids(replacement, provider) else None
                 )
                 for model_id in model_ids:
-                    status = choose_status("deprecated retirement", sunset)
+                    status = choose_status(
+                        "active"
+                        if provider == "gemini" and not sunset
+                        else "deprecated retirement",
+                        sunset,
+                    )
                     merge_candidate(
                         store=out,
                         provider=provider,
@@ -698,6 +733,30 @@ def parse_tables(
             notes=f"Crawled from {url}: explicit lifecycle text sentence.",
             source_url=url,
         )
+
+    if provider == "anthropic":
+        explicit_without_date = re.compile(
+            r"(?P<model>claude-[a-z0-9.-]+)\)?\s+is deprecated"
+            r".{0,400}?(?:migrate to|use)\s+.*?"
+            r"(?P<replacement>claude-[a-z0-9.-]+)",
+            re.IGNORECASE | re.DOTALL,
+        )
+        for match in explicit_without_date.finditer(text_blob):
+            model_id = normalize_model_id(match.group("model"))
+            replacement = normalize_model_id(match.group("replacement"))
+            if not is_probable_model_id(provider, model_id):
+                continue
+            merge_candidate(
+                store=out,
+                provider=provider,
+                model_id=model_id,
+                status="deprecated",
+                deprecated_date=None,
+                sunset_date=None,
+                replacement=replacement if is_probable_model_id(provider, replacement) else None,
+                notes=f"Crawled from {url}: explicit deprecation text.",
+                source_url=url,
+            )
 
 
 def crawl_sources(sources: Dict[str, List[str]]) -> Tuple[Dict[Tuple[str, str], Dict[str, object]], List[Dict[str, object]], List[str]]:
