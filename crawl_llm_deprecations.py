@@ -36,17 +36,29 @@ STATUS_PRIORITY = {"active": 0, "legacy": 1, "deprecated": 2, "retired": 3}
 
 MONTHS = {
     "january": 1,
+    "jan": 1,
     "february": 2,
+    "feb": 2,
     "march": 3,
+    "mar": 3,
     "april": 4,
+    "apr": 4,
     "may": 5,
     "june": 6,
+    "jun": 6,
     "july": 7,
+    "jul": 7,
     "august": 8,
+    "aug": 8,
     "september": 9,
+    "sep": 9,
+    "sept": 9,
     "october": 10,
+    "oct": 10,
     "november": 11,
+    "nov": 11,
     "december": 12,
+    "dec": 12,
 }
 
 MODEL_REGEX_BY_PROVIDER = {
@@ -60,9 +72,10 @@ MODEL_REGEX_BY_PROVIDER = {
     ),
     "anthropic": re.compile(r"\bclaude-[a-z0-9.-]+\b", re.IGNORECASE),
     "gemini": re.compile(
-        r"\b(?:gemini|veo|nano-banana|imagen|imagetext|virtual-try-on|"
-        r"textembedding-gecko|imagegeneration|text-bison|chat-bison|code-gecko|"
-        r"gemini-embedding|text-embedding)"
+        r"\b(?:gemini|gemma|veo|nano-banana|imagen|imagetext|virtual-try-on|"
+        r"textembedding-gecko|multimodalembedding|imagegeneration|text-bison|"
+        r"chat-bison|code-gecko|gemini-embedding|text-embedding|"
+        r"text-multilingual-embedding)"
         r"[a-z0-9._:@-]*\*?\b",
         re.IGNORECASE,
     ),
@@ -96,9 +109,10 @@ def is_probable_model_id(provider: str, token: str) -> bool:
     if provider == "gemini":
         return bool(
             re.match(
-                r"^(gemini-|veo-|nano-banana|imagen|imagetext|virtual-try-on|"
-                r"textembedding-gecko|imagegeneration|text-bison|chat-bison|"
-                r"code-gecko|gemini-embedding|text-embedding)",
+                r"^(gemini-|gemma-|veo-|nano-banana|imagen|imagetext|virtual-try-on|"
+                r"textembedding-gecko|multimodalembedding|imagegeneration|text-bison|"
+                r"chat-bison|code-gecko|gemini-embedding|text-embedding|"
+                r"text-multilingual-embedding)",
                 token,
             )
         )
@@ -108,6 +122,19 @@ def is_probable_model_id(provider: str, token: str) -> bool:
 def extract_model_ids(text: str, provider: str) -> List[str]:
     regex = MODEL_REGEX_BY_PROVIDER[provider]
     out = []
+    if provider == "gemini":
+        for match in re.finditer(
+            r"\bGemini\s+(\d+(?:\.\d+)*)\s+"
+            r"(Flash(?:[\s-]Lite)?|Pro)(?:\s+(Image|Live))?\b",
+            text,
+            re.IGNORECASE,
+        ):
+            parts = ["gemini", match.group(1), match.group(2)]
+            if match.group(3):
+                parts.append(match.group(3))
+            out.append(normalize_model_id("-".join(parts).replace(" ", "-")))
+        for match in re.finditer(r"\bGemma\s+(\d+(?:\.\d+)*)\b", text, re.IGNORECASE):
+            out.append(f"gemma-{match.group(1)}".lower())
     for match in regex.finditer(text):
         # Prevent partial matches inside hyphenated IDs (for example
         # matching "davinci-edit-001" inside "text-davinci-edit-001").
@@ -145,6 +172,7 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
             "not before",
             "not sooner than",
             "no sooner than",
+            "or later",
             "unknown",
             "tbd",
         ]
@@ -162,7 +190,7 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
 
     # Month DD, YYYY  OR Month DD YYYY
     m = re.search(
-        r"\b(" + "|".join(MONTHS.keys()) + r")\s+(\d{1,2})(?:,)?\s+(20\d{2})\b",
+        r"\b(" + "|".join(MONTHS.keys()) + r")\s+(\d{1,2})(?:st|nd|rd|th)?(?:,)?\s+(20\d{2})\b",
         sl,
     )
     if m:
@@ -176,7 +204,7 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
 
     # DD Month YYYY
     m = re.search(
-        r"\b(\d{1,2})\s+(" + "|".join(MONTHS.keys()) + r")(?:,)?\s+(20\d{2})\b",
+        r"\b(\d{1,2})(?:st|nd|rd|th)?\s+(" + "|".join(MONTHS.keys()) + r")(?:,)?\s+(20\d{2})\b",
         sl,
     )
     if m:
@@ -489,6 +517,13 @@ def merge_candidate(
         existing["replacement"] = replacement
     if notes and ("crawl" in str(existing["notes"]).lower() or not existing["notes"]):
         existing["notes"] = notes
+    final_sunset = existing["sunset_date"]
+    if final_sunset and existing["status"] in {"deprecated", "retired"}:
+        existing["status"] = (
+            "retired"
+            if final_sunset < date.today().strftime("%Y-%m-%d")
+            else "deprecated"
+        )
     existing["_source_urls"].add(source_url)
 
 
@@ -574,8 +609,24 @@ def parse_tables(
         # OpenAI or Gemini style lifecycle table:
         # Model ID | Release date | Retirement date | Recommended upgrade
         if (
-            ("recommended upgrade" in header_str and "retirement date" in header_str)
-            or ("shutdown date" in header_str and "recommended replacement" in header_str)
+            any(
+                date_header in header_str
+                for date_header in (
+                    "retirement date",
+                    "discontinuation date",
+                    "shutdown date",
+                    "sunset",
+                )
+            )
+            and any(
+                replacement_header in header_str
+                for replacement_header in (
+                    "recommended upgrade",
+                    "recommended replacement",
+                    "replacement model",
+                    "substitute model",
+                )
+            )
         ):
             model_idx = next(
                 (
@@ -584,6 +635,7 @@ def parse_tables(
                     if (
                         "model id" in h
                         or "model / system" in h
+                        or "model family / snapshot" in h
                         or h.strip() == "model"
                         or "deprecated model" in h
                         or "legacy model" in h
@@ -616,7 +668,11 @@ def parse_tables(
                     " or ".join(extract_model_ids(replacement, provider)) if extract_model_ids(replacement, provider) else None
                 )
                 for model_id in model_ids:
-                    status = choose_status("deprecated retirement", sunset)
+                    status = (
+                        choose_status("deprecated retirement", sunset)
+                        if sunset
+                        else "active"
+                    )
                     merge_candidate(
                         store=out,
                         provider=provider,
