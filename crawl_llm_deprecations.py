@@ -73,8 +73,9 @@ MODEL_REGEX_BY_PROVIDER = {
     "anthropic": re.compile(r"\bclaude-[a-z0-9.-]+\b", re.IGNORECASE),
     "gemini": re.compile(
         r"\b(?:gemini|gemma|veo|nano-banana|imagen|imagetext|virtual-try-on|"
-        r"textembedding-gecko|imagegeneration|text-bison|chat-bison|code-gecko|"
-        r"gemini-embedding|text-embedding)"
+        r"textembedding-gecko|multimodalembedding|imagegeneration|text-bison|"
+        r"chat-bison|code-gecko|gemini-embedding|text-embedding|"
+        r"text-multilingual-embedding)"
         r"[a-z0-9._:@-]*\*?\b",
         re.IGNORECASE,
     ),
@@ -109,8 +110,9 @@ def is_probable_model_id(provider: str, token: str) -> bool:
         return bool(
             re.match(
                 r"^(gemini-|gemma-|veo-|nano-banana|imagen|imagetext|virtual-try-on|"
-                r"textembedding-gecko|imagegeneration|text-bison|chat-bison|"
-                r"code-gecko|gemini-embedding|text-embedding)",
+                r"textembedding-gecko|multimodalembedding|imagegeneration|text-bison|"
+                r"chat-bison|code-gecko|gemini-embedding|text-embedding|"
+                r"text-multilingual-embedding)",
                 token,
             )
         )
@@ -633,6 +635,7 @@ def parse_tables(
                     if (
                         "model id" in h
                         or "model / system" in h
+                        or "model family / snapshot" in h
                         or h.strip() == "model"
                         or "deprecated model" in h
                         or "legacy model" in h
