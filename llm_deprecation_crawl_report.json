@@ -1,5 +1,5 @@
 {
-  "run_timestamp_utc": "2026-07-05T14:04:13Z",
+  "run_timestamp_utc": "2026-09-06T14:04:53Z",
   "user_agent": "LLMDeprecationCrawler/1.0 (compliance)",
   "sources": {
     "openai": [
@@ -9,7 +9,7 @@
     ],
     "anthropic": [
       "https://platform.claude.com/docs/en/about-claude/model-deprecations",
-      "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "https://platform.claude.com/docs/en/models/overview",
       "https://platform.claude.com/docs/en/release-notes/overview"
     ],
     "gemini": [
@@ -24,16 +24,12 @@
       "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite",
       "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite-image",
       "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-image",
-      "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-image-preview",
       "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro-image",
-      "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro-image-preview",
       "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-pro",
       "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash",
       "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash-lite",
       "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash-image",
-      "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash-live-api",
-      "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-0-flash",
-      "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-0-flash-lite"
+      "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash-live-api"
     ]
   },
   "url_results": [
@@ -46,7 +42,7 @@
       "fetched_via": "direct",
       "error": null,
       "robots_error": null,
-      "records_extracted": 79
+      "records_extracted": 83
     },
     {
       "provider": "openai",
@@ -79,12 +75,12 @@
       "fetched_via": "direct",
       "error": null,
       "robots_error": null,
-      "records_extracted": 26
+      "records_extracted": 30
     },
     {
       "provider": "anthropic",
-      "url": "https://platform.claude.com/docs/en/about-claude/models/overview",
-      "final_url": "https://platform.claude.com/docs/en/about-claude/models/overview",
+      "url": "https://platform.claude.com/docs/en/models/overview",
+      "final_url": "https://platform.claude.com/docs/en/models/overview",
       "http_status": 200,
       "fallback_url": null,
       "fetched_via": "direct",
@@ -156,7 +152,7 @@
       "fetched_via": "direct",
       "error": null,
       "robots_error": null,
-      "records_extracted": 1
+      "records_extracted": 0
     },
     {
       "provider": "gemini",
@@ -226,30 +222,8 @@
     },
     {
       "provider": "gemini",
-      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-image-preview",
-      "final_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-image-preview",
-      "http_status": 200,
-      "fallback_url": null,
-      "fetched_via": "direct",
-      "error": null,
-      "robots_error": null,
-      "records_extracted": 0
-    },
-    {
-      "provider": "gemini",
       "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro-image",
       "final_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro-image",
-      "http_status": 200,
-      "fallback_url": null,
-      "fetched_via": "direct",
-      "error": null,
-      "robots_error": null,
-      "records_extracted": 0
-    },
-    {
-      "provider": "gemini",
-      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro-image-preview",
-      "final_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-pro-image-preview",
       "http_status": 200,
       "fallback_url": null,
       "fetched_via": "direct",
@@ -277,7 +251,7 @@
       "fetched_via": "direct",
       "error": null,
       "robots_error": null,
-      "records_extracted": 1
+      "records_extracted": 0
     },
     {
       "provider": "gemini",
@@ -288,7 +262,7 @@
       "fetched_via": "direct",
       "error": null,
       "robots_error": null,
-      "records_extracted": 1
+      "records_extracted": 0
     },
     {
       "provider": "gemini",
@@ -311,31 +285,9 @@
       "error": null,
       "robots_error": null,
       "records_extracted": 0
-    },
-    {
-      "provider": "gemini",
-      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-0-flash",
-      "final_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-0-flash",
-      "http_status": 200,
-      "fallback_url": null,
-      "fetched_via": "direct",
-      "error": null,
-      "robots_error": null,
-      "records_extracted": 0
-    },
-    {
-      "provider": "gemini",
-      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-0-flash-lite",
-      "final_url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-0-flash-lite",
-      "http_status": 200,
-      "fallback_url": null,
-      "fetched_via": "direct",
-      "error": null,
-      "robots_error": null,
-      "records_extracted": 0
     }
   ],
-  "crawl_record_count": 125,
+  "crawl_record_count": 130,
   "crawl_records": [
     {
       "provider": "anthropic",
@@ -456,6 +408,24 @@
     },
     {
       "provider": "anthropic",
+      "model_id": "claude-fable-5",
+      "status": "active",
+      "deprecated_date": null,
+      "sunset_date": null,
+      "replacement": null,
+      "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: model status table."
+    },
+    {
+      "provider": "anthropic",
+      "model_id": "claude-fable-5-1",
+      "status": "active",
+      "deprecated_date": null,
+      "sunset_date": null,
+      "replacement": null,
+      "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: model status table."
+    },
+    {
+      "provider": "anthropic",
       "model_id": "claude-haiku-4-5-20251001",
       "status": "active",
       "deprecated_date": null,
@@ -493,7 +463,7 @@
     {
       "provider": "anthropic",
       "model_id": "claude-opus-4-1-20250805",
-      "status": "deprecated",
+      "status": "retired",
       "deprecated_date": "2026-06-05",
       "sunset_date": "2026-08-05",
       "replacement": "claude-opus-4-8",
@@ -546,6 +516,15 @@
     },
     {
       "provider": "anthropic",
+      "model_id": "claude-opus-5",
+      "status": "active",
+      "deprecated_date": null,
+      "sunset_date": null,
+      "replacement": null,
+      "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: model status table."
+    },
+    {
+      "provider": "anthropic",
       "model_id": "claude-sonnet-4-20250514",
       "status": "retired",
       "deprecated_date": "2026-04-14",
@@ -565,6 +544,15 @@
     {
       "provider": "anthropic",
       "model_id": "claude-sonnet-4-6",
+      "status": "active",
+      "deprecated_date": null,
+      "sunset_date": null,
+      "replacement": null,
+      "notes": "Crawled from https://platform.claude.com/docs/en/about-claude/model-deprecations: model status table."
+    },
+    {
+      "provider": "anthropic",
+      "model_id": "claude-sonnet-5",
       "status": "active",
       "deprecated_date": null,
       "sunset_date": null,
@@ -672,33 +660,6 @@
     },
     {
       "provider": "gemini",
-      "model_id": "gemini-2.5-flash-lite-preview-09-2025",
-      "status": "deprecated",
-      "deprecated_date": null,
-      "sunset_date": "2026-07-09",
-      "replacement": "gemini-2.5-flash-lite",
-      "notes": "Crawled from https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash-lite: explicit lifecycle text sentence."
-    },
-    {
-      "provider": "gemini",
-      "model_id": "gemini-2.5-flash-preview-09-2025",
-      "status": "deprecated",
-      "deprecated_date": null,
-      "sunset_date": "2026-07-09",
-      "replacement": "gemini-2.5-flash",
-      "notes": "Crawled from https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash: explicit lifecycle text sentence."
-    },
-    {
-      "provider": "gemini",
-      "model_id": "gemini-live-2.5-flash-preview-native-audio-09-2025",
-      "status": "retired",
-      "deprecated_date": null,
-      "sunset_date": "2026-03-19",
-      "replacement": null,
-      "notes": "Crawled from https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash-live-api: explicit lifecycle text sentence."
-    },
-    {
-      "provider": "gemini",
       "model_id": "imagetext",
       "status": "retired",
       "deprecated_date": null,
@@ -766,7 +727,7 @@
       "status": "retired",
       "deprecated_date": null,
       "sunset_date": "2026-09-28",
-      "replacement": "gpt-5.4-mini or gpt-5-mini",
+      "replacement": "gpt-5.6-terra",
       "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
@@ -892,7 +853,7 @@
       "status": "retired",
       "deprecated_date": null,
       "sunset_date": "2026-09-28",
-      "replacement": "gpt-5.4-mini or gpt-5-mini",
+      "replacement": "gpt-5.6-terra",
       "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
@@ -919,7 +880,7 @@
       "status": "deprecated",
       "deprecated_date": null,
       "sunset_date": "2026-09-28",
-      "replacement": "gpt-5.4-mini or gpt-5-mini",
+      "replacement": "gpt-5.6-terra",
       "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
@@ -937,7 +898,7 @@
       "status": "deprecated",
       "deprecated_date": null,
       "sunset_date": "2026-09-28",
-      "replacement": "gpt-5.4-mini or gpt-5-mini",
+      "replacement": "gpt-5.6-terra",
       "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
@@ -1077,6 +1038,15 @@
     },
     {
       "provider": "openai",
+      "model_id": "gpt-4o-mini-transcribe",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": null,
+      "replacement": "gpt-live-transcribe or gpt-transcribe",
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
       "model_id": "gpt-4o-realtime-preview",
       "status": "retired",
       "deprecated_date": null,
@@ -1113,11 +1083,29 @@
     },
     {
       "provider": "openai",
+      "model_id": "gpt-4o-transcribe",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": null,
+      "replacement": "gpt-live-transcribe or gpt-transcribe",
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "gpt-4o-transcribe-diarize",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": null,
+      "replacement": "gpt-live-transcribe or gpt-transcribe",
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
       "model_id": "gpt-5-2025-08-07",
       "status": "deprecated",
       "deprecated_date": null,
       "sunset_date": null,
-      "replacement": "gpt-5.5",
+      "replacement": "gpt-5.6-sol",
       "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
@@ -1126,7 +1114,7 @@
       "status": "deprecated",
       "deprecated_date": null,
       "sunset_date": null,
-      "replacement": "gpt-5.4-mini",
+      "replacement": "gpt-5.6-terra",
       "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
@@ -1135,7 +1123,7 @@
       "status": "deprecated",
       "deprecated_date": null,
       "sunset_date": null,
-      "replacement": "gpt-5.4-nano",
+      "replacement": "gpt-5.6-luna",
       "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
@@ -1144,7 +1132,7 @@
       "status": "deprecated",
       "deprecated_date": null,
       "sunset_date": null,
-      "replacement": "gpt-5.5-pro",
+      "replacement": "gpt-5.6-sol",
       "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
@@ -1153,7 +1141,7 @@
       "status": "deprecated",
       "deprecated_date": null,
       "sunset_date": null,
-      "replacement": "gpt-5.5",
+      "replacement": "gpt-5.6-sol",
       "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
@@ -1162,7 +1150,7 @@
       "status": "deprecated",
       "deprecated_date": null,
       "sunset_date": null,
-      "replacement": "gpt-5.5",
+      "replacement": "gpt-5.6-sol",
       "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
@@ -1207,7 +1195,7 @@
       "status": "deprecated",
       "deprecated_date": null,
       "sunset_date": null,
-      "replacement": "gpt-5.5",
+      "replacement": "gpt-5.6-sol",
       "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
@@ -1216,7 +1204,7 @@
       "status": "deprecated",
       "deprecated_date": null,
       "sunset_date": null,
-      "replacement": "gpt-5.5-pro",
+      "replacement": "gpt-5.6-sol",
       "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     },
     {
@@ -1461,18 +1449,27 @@
       "sunset_date": "2024-01-04",
       "replacement": "text-embedding-3-small",
       "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
+    },
+    {
+      "provider": "openai",
+      "model_id": "whisper-1",
+      "status": "deprecated",
+      "deprecated_date": null,
+      "sunset_date": null,
+      "replacement": "gpt-live-transcribe or gpt-transcribe",
+      "notes": "Crawled from https://developers.openai.com/api/docs/deprecations: lifecycle table."
     }
   ],
   "provider_summary": {
     "openai": {
       "updated": 0,
-      "added": 6,
-      "unchanged": 106
+      "added": 0,
+      "unchanged": 113
     },
     "anthropic": {
-      "updated": 2,
+      "updated": 0,
       "added": 0,
-      "unchanged": 30
+      "unchanged": 36
     },
     "gemini": {
       "updated": 0,
