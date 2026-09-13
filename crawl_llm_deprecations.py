@@ -485,6 +485,11 @@ def merge_candidate(
         existing["deprecated_date"] = later_date(existing["deprecated_date"], deprecated_date)
     if sunset_date:
         existing["sunset_date"] = later_date(existing["sunset_date"], sunset_date)
+        existing["status"] = (
+            "retired"
+            if existing["sunset_date"] < date.today().strftime("%Y-%m-%d")
+            else "deprecated"
+        )
     if replacement and not existing["replacement"]:
         existing["replacement"] = replacement
     if notes and ("crawl" in str(existing["notes"]).lower() or not existing["notes"]):
