@@ -21,9 +21,9 @@ from datetime import date, datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
+from urllib.error import HTTPError
 from urllib.parse import urlparse
-
-import requests
+from urllib.request import Request, urlopen
 
 
 USER_AGENT = "LLMDeprecationCrawler/1.0 (compliance)"
@@ -62,7 +62,7 @@ MODEL_REGEX_BY_PROVIDER = {
     "gemini": re.compile(
         r"\b(?:gemini|veo|nano-banana|imagen|imagetext|virtual-try-on|"
         r"textembedding-gecko|imagegeneration|text-bison|chat-bison|code-gecko|"
-        r"gemini-embedding|text-embedding)"
+        r"gemini-embedding|text-embedding|text-multilingual-embedding|multimodalembedding)"
         r"[a-z0-9._:@-]*\*?\b",
         re.IGNORECASE,
     ),
@@ -76,6 +76,21 @@ REPLACEMENT_PATTERNS = [
         re.IGNORECASE,
     ),
 ]
+
+
+def fetch_url(url: str) -> Tuple[int, str, str]:
+    request = Request(url, headers={"User-Agent": USER_AGENT})
+    try:
+        with urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
+            return response.status, response.url, response.read().decode(
+                response.headers.get_content_charset() or "utf-8",
+                errors="replace",
+            )
+    except HTTPError as exc:
+        return exc.code, exc.url, exc.read().decode(
+            exc.headers.get_content_charset() or "utf-8",
+            errors="replace",
+        )
 
 
 def normalize_model_id(token: str) -> str:
@@ -98,7 +113,8 @@ def is_probable_model_id(provider: str, token: str) -> bool:
             re.match(
                 r"^(gemini-|veo-|nano-banana|imagen|imagetext|virtual-try-on|"
                 r"textembedding-gecko|imagegeneration|text-bison|chat-bison|"
-                r"code-gecko|gemini-embedding|text-embedding)",
+                r"code-gecko|gemini-embedding|text-embedding|"
+                r"text-multilingual-embedding|multimodalembedding)",
                 token,
             )
         )
@@ -145,6 +161,7 @@ def parse_date_yyyy_mm_dd(text: str) -> Optional[str]:
             "not before",
             "not sooner than",
             "no sooner than",
+            "or later",
             "unknown",
             "tbd",
         ]
@@ -580,7 +597,10 @@ def parse_tables(
         # OpenAI or Gemini style lifecycle table:
         # Model ID | Release date | Retirement date | Recommended upgrade
         if (
-            ("recommended upgrade" in header_str and "retirement date" in header_str)
+            (
+                "retirement date" in header_str
+                and ("recommended upgrade" in header_str or "replacement model id" in header_str)
+            )
             or ("shutdown date" in header_str and "recommended replacement" in header_str)
         ):
             model_idx = next(
@@ -622,7 +642,11 @@ def parse_tables(
                     " or ".join(extract_model_ids(replacement, provider)) if extract_model_ids(replacement, provider) else None
                 )
                 for model_id in model_ids:
-                    status = choose_status("deprecated retirement", sunset)
+                    status = (
+                        "active"
+                        if provider == "gemini" and not sunset
+                        else choose_status("deprecated retirement", sunset)
+                    )
                     merge_candidate(
                         store=out,
                         provider=provider,
@@ -647,6 +671,14 @@ def parse_tables(
                 if len(row) >= 2:
                     details[row[0].strip().lower()] = row[1]
             date_val = details.get("discontinuation date") or details.get("retirement date")
+            if not date_val and details.get("versions"):
+                date_match = re.search(
+                    r"(?:discontinuation|retirement)\s+date[^:]*:\s*(.+)",
+                    details["versions"],
+                    re.IGNORECASE,
+                )
+                if date_match:
+                    date_val = date_match.group(1)
             sunset = parse_date_yyyy_mm_dd(date_val or "")
             if sunset:
                 status = "retired" if sunset < date.today().strftime("%Y-%m-%d") else "deprecated"
@@ -714,8 +746,6 @@ def crawl_sources(sources: Dict[str, List[str]]) -> Tuple[Dict[Tuple[str, str], 
     robots_cache: Dict[str, Dict[str, List[Tuple[str, str]]]] = {}
     robots_errors: Dict[str, Optional[str]] = {}
     host_last_request_ts: Dict[str, float] = {}
-    session = requests.Session()
-    session.headers.update({"User-Agent": USER_AGENT})
 
     for provider, urls in sources.items():
         for url in urls:
@@ -726,12 +756,12 @@ def crawl_sources(sources: Dict[str, List[str]]) -> Tuple[Dict[Tuple[str, str], 
             if host not in robots_cache:
                 robots_url = f"{parsed.scheme}://{host}/robots.txt"
                 try:
-                    robots_resp = session.get(robots_url, timeout=REQUEST_TIMEOUT_SECONDS)
-                    if robots_resp.status_code >= 400:
+                    robots_status, _, robots_text = fetch_url(robots_url)
+                    if robots_status >= 400:
                         robots_cache[host] = {}
-                        robots_errors[host] = f"robots HTTP {robots_resp.status_code}; treated as allow"
+                        robots_errors[host] = f"robots HTTP {robots_status}; treated as allow"
                     else:
-                        robots_cache[host] = parse_robots_txt(robots_resp.text)
+                        robots_cache[host] = parse_robots_txt(robots_text)
                         robots_errors[host] = None
                 except Exception as exc:
                     robots_cache[host] = {}
@@ -770,23 +800,21 @@ def crawl_sources(sources: Dict[str, List[str]]) -> Tuple[Dict[Tuple[str, str], 
             fetched_via = "direct"
             error = None
             try:
-                resp = session.get(url, timeout=REQUEST_TIMEOUT_SECONDS)
-                http_status = resp.status_code
-                final_url = resp.url
-                response_text = resp.text
+                http_status, final_url, response_text = fetch_url(url)
                 host_last_request_ts[host] = time.time()
-                if resp.status_code in FETCH_FALLBACK_STATUSES:
+                if http_status in FETCH_FALLBACK_STATUSES:
+                    direct_status = http_status
                     fallback_url = build_jina_reader_url(url)
-                    fb_resp = session.get(fallback_url, timeout=REQUEST_TIMEOUT_SECONDS)
-                    if fb_resp.status_code < 400:
+                    fallback_status, fallback_final_url, fallback_text = fetch_url(fallback_url)
+                    if fallback_status < 400:
                         fetched_via = "jina_reader"
-                        http_status = fb_resp.status_code
-                        final_url = fb_resp.url
-                        response_text = fb_resp.text
+                        http_status = fallback_status
+                        final_url = fallback_final_url
+                        response_text = fallback_text
                     else:
-                        raise requests.HTTPError(f"HTTP {resp.status_code}")
-                elif resp.status_code >= 400:
-                    raise requests.HTTPError(f"HTTP {resp.status_code}")
+                        raise RuntimeError(f"HTTP {direct_status}")
+                elif http_status >= 400:
+                    raise RuntimeError(f"HTTP {http_status}")
                 parser = PageParser()
                 parser.feed(response_text)
                 text_blob = parser.text()
