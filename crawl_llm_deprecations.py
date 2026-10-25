@@ -21,9 +21,9 @@ from datetime import date, datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
+from urllib.error import HTTPError
 from urllib.parse import urlparse
-
-import requests
+from urllib.request import Request, urlopen
 
 
 USER_AGENT = "LLMDeprecationCrawler/1.0 (compliance)"
@@ -647,6 +647,16 @@ def parse_tables(
                 if len(row) >= 2:
                     details[row[0].strip().lower()] = row[1]
             date_val = details.get("discontinuation date") or details.get("retirement date")
+            version_text = details.get("versions", "")
+            if not date_val and version_text:
+                lifecycle_date = re.search(
+                    r"(?:discontinuation|retirement)\s+date\s*:\s*"
+                    r"((?:[A-Za-z]+\s+\d{1,2},\s+20\d{2})|(?:20\d{2}-\d{1,2}-\d{1,2}))",
+                    version_text,
+                    re.IGNORECASE,
+                )
+                if lifecycle_date:
+                    date_val = lifecycle_date.group(1)
             sunset = parse_date_yyyy_mm_dd(date_val or "")
             if sunset:
                 status = "retired" if sunset < date.today().strftime("%Y-%m-%d") else "deprecated"
@@ -658,17 +668,19 @@ def parse_tables(
                 )
                 if model_mention:
                     replacement = extract_replacement(model_mention.group(0), provider)
-                merge_candidate(
-                    store=out,
-                    provider=provider,
-                    model_id=model_id,
-                    status=status,
-                    deprecated_date=None,
-                    sunset_date=sunset,
-                    replacement=replacement,
-                    notes=f"Crawled from {url}: model details table.",
-                    source_url=url,
-                )
+                version_ids = extract_model_ids(version_text, provider)
+                for lifecycle_model_id in version_ids or [model_id]:
+                    merge_candidate(
+                        store=out,
+                        provider=provider,
+                        model_id=lifecycle_model_id,
+                        status=status,
+                        deprecated_date=None,
+                        sunset_date=sunset,
+                        replacement=replacement,
+                        notes=f"Crawled from {url}: model details table.",
+                        source_url=url,
+                    )
             continue
 
     # Targeted text extraction for explicit lifecycle sentences only.
@@ -714,8 +726,6 @@ def crawl_sources(sources: Dict[str, List[str]]) -> Tuple[Dict[Tuple[str, str], 
     robots_cache: Dict[str, Dict[str, List[Tuple[str, str]]]] = {}
     robots_errors: Dict[str, Optional[str]] = {}
     host_last_request_ts: Dict[str, float] = {}
-    session = requests.Session()
-    session.headers.update({"User-Agent": USER_AGENT})
 
     for provider, urls in sources.items():
         for url in urls:
@@ -726,13 +736,19 @@ def crawl_sources(sources: Dict[str, List[str]]) -> Tuple[Dict[Tuple[str, str], 
             if host not in robots_cache:
                 robots_url = f"{parsed.scheme}://{host}/robots.txt"
                 try:
-                    robots_resp = session.get(robots_url, timeout=REQUEST_TIMEOUT_SECONDS)
-                    if robots_resp.status_code >= 400:
-                        robots_cache[host] = {}
-                        robots_errors[host] = f"robots HTTP {robots_resp.status_code}; treated as allow"
-                    else:
-                        robots_cache[host] = parse_robots_txt(robots_resp.text)
-                        robots_errors[host] = None
+                    with urlopen(
+                        Request(robots_url, headers={"User-Agent": USER_AGENT}),
+                        timeout=REQUEST_TIMEOUT_SECONDS,
+                    ) as robots_resp:
+                        robots_text = robots_resp.read().decode(
+                            robots_resp.headers.get_content_charset() or "utf-8",
+                            errors="replace",
+                        )
+                    robots_cache[host] = parse_robots_txt(robots_text)
+                    robots_errors[host] = None
+                except HTTPError as exc:
+                    robots_cache[host] = {}
+                    robots_errors[host] = f"robots HTTP {exc.code}; treated as allow"
                 except Exception as exc:
                     robots_cache[host] = {}
                     robots_errors[host] = f"robots read failed: {exc}; treated as allow"
@@ -770,23 +786,40 @@ def crawl_sources(sources: Dict[str, List[str]]) -> Tuple[Dict[Tuple[str, str], 
             fetched_via = "direct"
             error = None
             try:
-                resp = session.get(url, timeout=REQUEST_TIMEOUT_SECONDS)
-                http_status = resp.status_code
-                final_url = resp.url
-                response_text = resp.text
+                try:
+                    with urlopen(
+                        Request(url, headers={"User-Agent": USER_AGENT}),
+                        timeout=REQUEST_TIMEOUT_SECONDS,
+                    ) as resp:
+                        http_status = resp.status
+                        final_url = resp.geturl()
+                        response_text = resp.read().decode(
+                            resp.headers.get_content_charset() or "utf-8",
+                            errors="replace",
+                        )
+                except HTTPError as exc:
+                    http_status = exc.code
+                    final_url = exc.geturl()
+                    response_text = exc.read().decode(
+                        exc.headers.get_content_charset() or "utf-8",
+                        errors="replace",
+                    )
+                    if exc.code not in FETCH_FALLBACK_STATUSES:
+                        raise
                 host_last_request_ts[host] = time.time()
-                if resp.status_code in FETCH_FALLBACK_STATUSES:
+                if http_status in FETCH_FALLBACK_STATUSES:
                     fallback_url = build_jina_reader_url(url)
-                    fb_resp = session.get(fallback_url, timeout=REQUEST_TIMEOUT_SECONDS)
-                    if fb_resp.status_code < 400:
+                    with urlopen(
+                        Request(fallback_url, headers={"User-Agent": USER_AGENT}),
+                        timeout=REQUEST_TIMEOUT_SECONDS,
+                    ) as fb_resp:
                         fetched_via = "jina_reader"
-                        http_status = fb_resp.status_code
-                        final_url = fb_resp.url
-                        response_text = fb_resp.text
-                    else:
-                        raise requests.HTTPError(f"HTTP {resp.status_code}")
-                elif resp.status_code >= 400:
-                    raise requests.HTTPError(f"HTTP {resp.status_code}")
+                        http_status = fb_resp.status
+                        final_url = fb_resp.geturl()
+                        response_text = fb_resp.read().decode(
+                            fb_resp.headers.get_content_charset() or "utf-8",
+                            errors="replace",
+                        )
                 parser = PageParser()
                 parser.feed(response_text)
                 text_blob = parser.text()
