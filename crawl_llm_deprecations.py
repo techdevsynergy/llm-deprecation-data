@@ -21,9 +21,9 @@ from datetime import date, datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
+from urllib.error import HTTPError
 from urllib.parse import urlparse
-
-import requests
+from urllib.request import Request, urlopen
 
 
 USER_AGENT = "LLMDeprecationCrawler/1.0 (compliance)"
@@ -76,6 +76,23 @@ REPLACEMENT_PATTERNS = [
         re.IGNORECASE,
     ),
 ]
+
+
+def fetch_url(url: str) -> Tuple[int, str, str]:
+    request = Request(url, headers={"User-Agent": USER_AGENT})
+    try:
+        with urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
+            return (
+                response.status,
+                response.geturl(),
+                response.read().decode(response.headers.get_content_charset() or "utf-8", errors="replace"),
+            )
+    except HTTPError as exc:
+        return (
+            exc.code,
+            exc.geturl(),
+            exc.read().decode(exc.headers.get_content_charset() or "utf-8", errors="replace"),
+        )
 
 
 def normalize_model_id(token: str) -> str:
@@ -714,8 +731,6 @@ def crawl_sources(sources: Dict[str, List[str]]) -> Tuple[Dict[Tuple[str, str], 
     robots_cache: Dict[str, Dict[str, List[Tuple[str, str]]]] = {}
     robots_errors: Dict[str, Optional[str]] = {}
     host_last_request_ts: Dict[str, float] = {}
-    session = requests.Session()
-    session.headers.update({"User-Agent": USER_AGENT})
 
     for provider, urls in sources.items():
         for url in urls:
@@ -726,12 +741,12 @@ def crawl_sources(sources: Dict[str, List[str]]) -> Tuple[Dict[Tuple[str, str], 
             if host not in robots_cache:
                 robots_url = f"{parsed.scheme}://{host}/robots.txt"
                 try:
-                    robots_resp = session.get(robots_url, timeout=REQUEST_TIMEOUT_SECONDS)
-                    if robots_resp.status_code >= 400:
+                    robots_status, _, robots_text = fetch_url(robots_url)
+                    if robots_status >= 400:
                         robots_cache[host] = {}
-                        robots_errors[host] = f"robots HTTP {robots_resp.status_code}; treated as allow"
+                        robots_errors[host] = f"robots HTTP {robots_status}; treated as allow"
                     else:
-                        robots_cache[host] = parse_robots_txt(robots_resp.text)
+                        robots_cache[host] = parse_robots_txt(robots_text)
                         robots_errors[host] = None
                 except Exception as exc:
                     robots_cache[host] = {}
@@ -770,23 +785,20 @@ def crawl_sources(sources: Dict[str, List[str]]) -> Tuple[Dict[Tuple[str, str], 
             fetched_via = "direct"
             error = None
             try:
-                resp = session.get(url, timeout=REQUEST_TIMEOUT_SECONDS)
-                http_status = resp.status_code
-                final_url = resp.url
-                response_text = resp.text
+                http_status, final_url, response_text = fetch_url(url)
                 host_last_request_ts[host] = time.time()
-                if resp.status_code in FETCH_FALLBACK_STATUSES:
+                if http_status in FETCH_FALLBACK_STATUSES:
                     fallback_url = build_jina_reader_url(url)
-                    fb_resp = session.get(fallback_url, timeout=REQUEST_TIMEOUT_SECONDS)
-                    if fb_resp.status_code < 400:
+                    fallback_status, fallback_final_url, fallback_text = fetch_url(fallback_url)
+                    if fallback_status < 400:
                         fetched_via = "jina_reader"
-                        http_status = fb_resp.status_code
-                        final_url = fb_resp.url
-                        response_text = fb_resp.text
+                        http_status = fallback_status
+                        final_url = fallback_final_url
+                        response_text = fallback_text
                     else:
-                        raise requests.HTTPError(f"HTTP {resp.status_code}")
-                elif resp.status_code >= 400:
-                    raise requests.HTTPError(f"HTTP {resp.status_code}")
+                        raise RuntimeError(f"HTTP {http_status}")
+                elif http_status >= 400:
+                    raise RuntimeError(f"HTTP {http_status}")
                 parser = PageParser()
                 parser.feed(response_text)
                 text_blob = parser.text()
